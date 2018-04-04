@@ -1,12 +1,15 @@
 package com.example.nickomarsellino.scheduling;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
  * Created by nicko marsellino on 3/18/2018.
  */
 
-public class Schedule {
+public class Schedule implements Parcelable {
 
     private long id;
     private String title;
@@ -66,4 +69,32 @@ public class Schedule {
         return date;
     }
 
+
+    public Schedule(Parcel source) {
+        title = source.readString();
+        date = source.readString();
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeString(date);
+    }
+
+    public static final Creator<Schedule> CREATOR = new Creator<Schedule>() {
+        @Override
+        public Schedule[] newArray(int size) {
+            return new Schedule[size];
+        }
+
+        @Override
+        public Schedule createFromParcel(Parcel source) {
+            return new Schedule(source);
+        }
+    };
 }

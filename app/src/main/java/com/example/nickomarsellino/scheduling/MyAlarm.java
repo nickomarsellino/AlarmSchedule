@@ -20,19 +20,24 @@ public class MyAlarm extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        String title = intent.getStringExtra("A");
-        createNotification(context, title);
+        Schedule schedule = intent.getExtras().getParcelable("schedule");
+
+        String title = schedule.getTitle();
+        String date = schedule.getDate();
+
+
+        createNotification(context, title, date);
 
     }
 
-    public void createNotification(Context context, String s) {
+    public void createNotification(Context context, String title, String date) {
 
-        Log.d("abcde", s);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 , new Intent(context,Home_Page.class), 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                 .setSmallIcon(R.drawable.plusdata)
-                .setContentTitle(s);
+                .setContentTitle(title)
+                .setContentText(date);
 
         builder.setContentIntent(pendingIntent);
         builder.setDefaults(android.support.v4.app.NotificationCompat.DEFAULT_SOUND);
