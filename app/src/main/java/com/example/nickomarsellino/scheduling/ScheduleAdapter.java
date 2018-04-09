@@ -92,7 +92,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Choose option");
-                builder.setMessage("View or Delete Schedule ?");
+                builder.setMessage("So... What ?");
 
                 builder.setPositiveButton("View Schedule", new DialogInterface.OnClickListener() {
                     @Override
@@ -101,7 +101,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                     }
                 });
 
-                builder.setNegativeButton("Delete Shedule", new DialogInterface.OnClickListener() {
+                builder.setNeutralButton("Delete Shedule", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         ScheduleDBHelper dbHelper = new ScheduleDBHelper(mContext);
@@ -116,12 +116,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                     }
                 });
 
-                builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Update Schedule", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
+                        goUpdateActivity(schedule.getId());
                     }
                 });
+
+
                 builder.create().show();
             }
         });
@@ -136,6 +138,12 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
     private void goViewActivity(long personId){
         Intent goToView = new Intent(mContext, show_Detail_Schedule.class);
+        goToView.putExtra("USER_ID", personId);
+        mContext.startActivity(goToView);
+    }
+
+    private void goUpdateActivity(long personId){
+        Intent goToView = new Intent(mContext, Update_Schedule.class);
         goToView.putExtra("USER_ID", personId);
         mContext.startActivity(goToView);
     }

@@ -95,6 +95,18 @@
                     />
 
                 <TextView
+                    android:id="@+id/detail_Time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:hint="Time :     "
+                    android:textSize="15dp"
+                    android:textAlignment="textEnd"
+                    android:textStyle="italic"
+                    android:layout_marginRight="20dp"
+                    />
+
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Image :"

@@ -28,6 +28,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
     public static final String COLUMN_SCHEDULE_TITLE = "title";
     public static final String COLUMN_SCHEDULE_CONTENT = "content";
     public static final String COLUMN_SCHEDULE_DATE = "date";
+    public static final String COLUMN_SCHEDULE_TIME= "time";
 
 
 
@@ -55,6 +56,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
                 COLUMN_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_SCHEDULE_TITLE + " TEXT NOT NULL, " +
                 COLUMN_SCHEDULE_CONTENT + " TEXT NOT NULL, " +
+                COLUMN_SCHEDULE_TIME + " TEXT NOT NULL, " +
                 COLUMN_SCHEDULE_DATE+ " TEXT NOT NULL);"
         );
 
@@ -85,6 +87,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         values.put(COLUMN_SCHEDULE_TITLE, schedule.getTitle());
         values.put(COLUMN_SCHEDULE_CONTENT, schedule.getContent());
         values.put(COLUMN_SCHEDULE_DATE, schedule.getDate());
+        values.put(COLUMN_SCHEDULE_TIME, schedule.getTime());
 
         // insert
         long rowId = sqLiteDatabase.insert(TABLE_SCHEDULE_NAME,null, values);
@@ -122,6 +125,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
                 schedule.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_SCHEDULE_ID)));
                 schedule.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TITLE)));
                 schedule.setContent(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_CONTENT)));
+                schedule.setTime(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TIME)));
                 schedule.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_DATE)));
                 ScheduleLinkedList.add(schedule);
             } while (cursor.moveToNext());
@@ -150,6 +154,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
             receivedSchedule.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TITLE)));
             receivedSchedule.setContent(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_CONTENT)));
             receivedSchedule.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_DATE)));
+            receivedSchedule.setTime(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TIME)));
 
         }
 
@@ -180,13 +185,6 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
                 cursorImage.moveToNext();
             }
 
-//            cursorImage.moveToFirst();
-//
-//            ScheduleImage receivedImage = new ScheduleImage();
-//
-//            receivedImage.setImage(cursorImage.getString(cursorImage.getColumnIndex(COLUMN_IMAGE_PATH)));
-//
-//            scheduleImages.add(receivedImage);
         }
 
         return scheduleImages;
