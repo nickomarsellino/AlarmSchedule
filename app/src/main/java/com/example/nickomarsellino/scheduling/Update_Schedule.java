@@ -166,9 +166,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         }
 
 
-
+        //Untuk split si Tanggal sesuai yang dibutuhkan
         String calender = schedule.getDate().toString();
-
 
         String[] separated = calender.split("-");
         String[] separatedDay = separated[0].split(": ");
@@ -177,7 +176,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         yearUpdate = Integer.parseInt(separated[2]);
         monthUpdate = Integer.parseInt(separated[1]);
 
-
+        //Untuk split si Time sesuai yang dibutuhkan
         String time = schedule.getTime().toString();
 
         String[] separatedTime = time.split(":");
@@ -210,6 +209,17 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
             @Override
             public void onClick(View view) {
 
+                String title =  titleDataUpdate.getText().toString().trim();
+                String content = contentDataUpdate.getText().toString().trim();
+                String date = text_CalendarUpdate.getText().toString().trim();
+                String time = text_TimeUpdate.getText().toString().trim();
+
+
+
+
+                Schedule updatedSchedule = new Schedule(title, content, date, time, imgs);
+
+                dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
             }
         });
 
@@ -330,8 +340,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
 
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        text_CalendarUpdate.setText("Reminder For: "+dayUpdate+"-"+monthUpdate+"-"+yearUpdate);
+    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+        text_CalendarUpdate.setText("Reminder For: "+day+"-"+month+"-"+year);
 
         TimePickerDialog timePickerDialog = new TimePickerDialog
                 (Update_Schedule.this, Update_Schedule.this,hourUpdate, minuteUpdate, android.text.format.DateFormat.is24HourFormat(this));
@@ -339,8 +349,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     }
 
     @Override
-    public void onTimeSet(TimePicker timePicker, int i, int i1) {
-        text_TimeUpdate.setText("Time: "+hourUpdate+":"+minuteUpdate);
+    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+        text_TimeUpdate.setText("Time: "+hour+":"+minute);
 
     }
 

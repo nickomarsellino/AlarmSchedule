@@ -211,4 +211,14 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
 
     }
 
+    /**update record**/
+    public void updateSchedule(long id, Context context, Schedule updatedSchedule) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //you can use the constants above instead of typing the column names
+        db.execSQL("UPDATE  "+TABLE_SCHEDULE_NAME+" SET title ='"+ updatedSchedule.getTitle() + "', content ='" + updatedSchedule.getContent() + "', date ='"+ updatedSchedule.getDate() + "', time ='"+ updatedSchedule.getTime() + "'  WHERE _id='" + id + "'");
+        Toast.makeText(context, "Updated successfully.", Toast.LENGTH_SHORT).show();
+
+    }
+
 }
