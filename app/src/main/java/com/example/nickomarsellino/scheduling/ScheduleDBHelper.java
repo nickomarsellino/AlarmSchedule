@@ -136,9 +136,6 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
 
 
 
-
-
-
     /**Query untuk nampilin detail sesuai yang dipilih**/
     public Schedule getSchedule(long id){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -167,10 +164,9 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         List<ScheduleImage> scheduleImages = new ArrayList<>();
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String queryImage = "SELECT path FROM " + TABLE_IMAGE_NAME + " WHERE schedule_id="+ id;
+        String queryImage = "SELECT path,_id FROM " + TABLE_IMAGE_NAME + " WHERE schedule_id="+ id;
 
         Cursor cursorImage = sqLiteDatabase.rawQuery(queryImage, null);
-
 
 
         if(cursorImage.getCount() > 0) {
@@ -179,8 +175,11 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
             for(int i=0; i<cursorImage.getCount(); i++){
 
                 ScheduleImage receivedImage = new ScheduleImage();
+
                 receivedImage.setImage(cursorImage.getString(cursorImage.getColumnIndex(COLUMN_IMAGE_PATH)));
                 scheduleImages.add(receivedImage);
+
+                receivedImage.setId(cursorImage.getLong(cursorImage.getColumnIndex(COLUMN_IMAGE_ID)));
 
                 cursorImage.moveToNext();
             }
@@ -205,7 +204,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
     public void deleteImageView(long id, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("DELETE FROM "+TABLE_IMAGE_NAME+" WHERE _id+='"+id+"'");
+        db.execSQL("DELETE FROM "+TABLE_IMAGE_NAME+" WHERE _id='"+id+"'");
 
         Toast.makeText(context, "Deleted successfully.", Toast.LENGTH_SHORT).show();
 

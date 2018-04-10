@@ -2,13 +2,17 @@ package com.example.nickomarsellino.scheduling;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -55,6 +59,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     //Untuk Database nya
     private ScheduleDBHelper dbHelper;
     private long receivedScheduleId;
+
 
 
     //Untuk Munculin Calendar
@@ -112,9 +117,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         }
 
         //Get Data Dari Id nya
-        Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
-        List<ScheduleImage> scheduleImage = dbHelper.getScheduleImage(receivedScheduleId);
-
+        final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+        final List<ScheduleImage> scheduleImage = dbHelper.getScheduleImage(receivedScheduleId);
 
 
         //Untuk Calender & nampilin Datanya
@@ -124,10 +128,10 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         text_CalendarUpdate.setText(schedule.getDate());
 
 
-        for(ScheduleImage img: scheduleImage){
+        for(final ScheduleImage img: scheduleImage){
 
             //Untuk COntainer di gambar dan tombol delete
-            LinearLayout ContainerContentData = new LinearLayout(Update_Schedule.this);
+            final LinearLayout ContainerContentData = new LinearLayout(Update_Schedule.this);
             ContainerContentData.setOrientation(LinearLayout.VERTICAL);
 
 
@@ -157,15 +161,35 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
             buttonDelete.setLayoutParams(cancel);
 
 
+
             ContainerContentData.addView(buttonDelete);
             ContainerContentData.addView(ivPictureData);
 
             mContainerGallery.addView(ContainerContentData, param);
 
-            imgs.add(img.getImage());
+
+            //Pada saat "Delete Image" Yang untuk view gambar yang di database di tekan
+            buttonDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ContainerContentData.removeAllViewsInLayout();
+                    ContainerContentData.removeAllViews();
+
+                    mContainerGallery.removeView(ContainerContentData);
+
+
+                    long test = img.getId();
+                    Log.v("test", String.valueOf(test));
+
+//                    dbHelper.deleteImageView(scheduleImg.getId(), Update_Schedule.this);
+
+                }
+            });
         }
 
 
+
+        mCurrentDate = Calendar.getInstance();
         //Untuk split si Tanggal sesuai yang dibutuhkan
         String calender = schedule.getDate().toString();
 
@@ -208,28 +232,69 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         saveButtonUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String title =  titleDataUpdate.getText().toString().trim();
-                String content = contentDataUpdate.getText().toString().trim();
-                String date = text_CalendarUpdate.getText().toString().trim();
-                String time = text_TimeUpdate.getText().toString().trim();
-
-
-
-
-                Schedule updatedSchedule = new Schedule(title, content, date, time, imgs);
-
-                dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
+                saveUpdateImage();
             }
         });
 
     }
 
+    public void saveUpdateImage(){
+        String title =  titleDataUpdate.getText().toString().trim();
+        String content = contentDataUpdate.getText().toString().trim();
+        String date = text_CalendarUpdate.getText().toString().trim();
+        String time = text_TimeUpdate.getText().toString().trim();
+
+
+        //Untuk Save Data di tabel Schedule
+        Schedule updatedSchedule = new Schedule(title, content, date, time, imgs);
+        dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
+
+        Log.v("qwerty", String.valueOf(receivedScheduleId));
+
+        //Untuk add gambar baru ke tabel Schedule Image
+        //foreach untuk nyimpen datanya sesuai banyak yang dimasukin
+        for(String img:updatedSchedule.getImages()){
+
+            ScheduleImage scheduleImage = new ScheduleImage();
+            scheduleImage.setIdSchedule(receivedScheduleId);
+            scheduleImage.setImage(img);
+
+            dbHelper.saveNewScheduleImage(scheduleImage);
+        }
 
 
 
+        //Untk Set Alarm dari inputan
+
+        mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
+        mCurrentDate.set(Calendar.MONTH,monthUpdate);
+        mCurrentDate.set(Calendar.YEAR,yearUpdate);
+        mCurrentDate.set(Calendar.HOUR_OF_DAY,hourUpdate);
+        mCurrentDate.set(Calendar.MINUTE,minuteUpdate);
+        mCurrentDate.set(Calendar.SECOND,0);
 
 
+
+        Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+        Bundle args = new Bundle();
+        args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+        intent.putExtra("a", args);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, getAlarmId(Update_Schedule.this), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+
+        startActivity(new Intent(Update_Schedule.this, Home_Page.class));
+    }
+
+
+    public static int getAlarmId(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        int alarmId = preferences.getInt("ALARM", 1);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("ALARM", alarmId + 1).apply();
+        return alarmId;
+    }
 
     //Minta Permission Untuk akses ke gallery
     public void reqPermission(){
@@ -330,8 +395,6 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
 
 
-
-
     //Untuk Calendar
     public void openDatePicker(View view) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(Update_Schedule.this, Update_Schedule.this, yearUpdate, monthUpdate, dayUpdate);
@@ -343,6 +406,10 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
         text_CalendarUpdate.setText("Reminder For: "+day+"-"+month+"-"+year);
 
+        dayUpdate = day;
+        monthUpdate = month;
+        yearUpdate = year;
+
         TimePickerDialog timePickerDialog = new TimePickerDialog
                 (Update_Schedule.this, Update_Schedule.this,hourUpdate, minuteUpdate, android.text.format.DateFormat.is24HourFormat(this));
         timePickerDialog.show();
@@ -350,9 +417,15 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
+
         text_TimeUpdate.setText("Time: "+hour+":"+minute);
+
+        minuteUpdate = minute;
+        hourUpdate = hour;
 
     }
 
+
     ////////////////////////////////////////////////////////////////////////////////
+
 }
