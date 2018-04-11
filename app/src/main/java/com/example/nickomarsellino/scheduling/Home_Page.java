@@ -32,7 +32,6 @@ public class Home_Page extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home__page);
 
-
         //Inisialisasi Buttonya
         createSchedule = (FloatingActionButton) findViewById(R.id.fab_create_schedule);
 

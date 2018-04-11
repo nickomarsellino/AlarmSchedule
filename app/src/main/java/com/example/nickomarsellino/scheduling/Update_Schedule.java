@@ -7,6 +7,7 @@ import android.app.DatePickerDialog;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -181,7 +183,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                     long test = img.getId();
                     Log.v("test", String.valueOf(test));
 
-                     dbHelper.deleteImageView(test, Update_Schedule.this);
+                    dbHelper.deleteImageView(test, Update_Schedule.this);
 
                 }
             });
@@ -425,7 +427,30 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
     }
 
-
     ////////////////////////////////////////////////////////////////////////////////
+
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder adbuilder = new AlertDialog.Builder(Update_Schedule.this);
+        adbuilder.setMessage("Do You Really Want To Exit ?")
+                .setCancelable(false)
+                .setPositiveButton("Save Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        saveUpdateImage();
+                    }
+                })
+
+                .setNegativeButton("Discard Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent in = new Intent(Update_Schedule.this, Home_Page.class);
+                        startActivity(in);
+                    }
+                })
+                .setTitle("WAIT");
+        adbuilder.show();
+    }
 
 }
