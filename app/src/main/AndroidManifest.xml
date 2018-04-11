@@ -21,11 +21,14 @@
         </activity>
         <activity android:name=".Add_Schedule" />
         <activity android:name=".show_Detail_Schedule" />
-        <activity android:name=".Home_Page"></activity>
+        <activity android:name=".Home_Page" />
 
-        <receiver android:name=".MyAlarm" android:enabled="true" android:exported="true"></receiver>
+        <receiver
+            android:name=".MyAlarm"
+            android:enabled="true"
+            android:exported="true" />
 
-
+        <activity android:name=".Update_Schedule"></activity>
     </application>
 
 </manifest>

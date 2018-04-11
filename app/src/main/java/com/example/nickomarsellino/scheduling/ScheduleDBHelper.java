@@ -28,6 +28,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
     public static final String COLUMN_SCHEDULE_TITLE = "title";
     public static final String COLUMN_SCHEDULE_CONTENT = "content";
     public static final String COLUMN_SCHEDULE_DATE = "date";
+    public static final String COLUMN_SCHEDULE_TIME= "time";
 
 
 
@@ -55,6 +56,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
                 COLUMN_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_SCHEDULE_TITLE + " TEXT NOT NULL, " +
                 COLUMN_SCHEDULE_CONTENT + " TEXT NOT NULL, " +
+                COLUMN_SCHEDULE_TIME + " TEXT NOT NULL, " +
                 COLUMN_SCHEDULE_DATE+ " TEXT NOT NULL);"
         );
 
@@ -85,6 +87,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         values.put(COLUMN_SCHEDULE_TITLE, schedule.getTitle());
         values.put(COLUMN_SCHEDULE_CONTENT, schedule.getContent());
         values.put(COLUMN_SCHEDULE_DATE, schedule.getDate());
+        values.put(COLUMN_SCHEDULE_TIME, schedule.getTime());
 
         // insert
         long rowId = sqLiteDatabase.insert(TABLE_SCHEDULE_NAME,null, values);
@@ -122,6 +125,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
                 schedule.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_SCHEDULE_ID)));
                 schedule.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TITLE)));
                 schedule.setContent(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_CONTENT)));
+                schedule.setTime(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TIME)));
                 schedule.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_DATE)));
                 ScheduleLinkedList.add(schedule);
             } while (cursor.moveToNext());
@@ -129,9 +133,6 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
 
         return ScheduleLinkedList;
     }
-
-
-
 
 
 
@@ -150,6 +151,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
             receivedSchedule.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TITLE)));
             receivedSchedule.setContent(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_CONTENT)));
             receivedSchedule.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_DATE)));
+            receivedSchedule.setTime(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TIME)));
 
         }
 
@@ -162,10 +164,11 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         List<ScheduleImage> scheduleImages = new ArrayList<>();
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String queryImage = "SELECT path FROM " + TABLE_IMAGE_NAME + " WHERE schedule_id="+ id;
+
+        //kita juga disini passing id supaya kita bisa delete sesuai yang dipilih
+        String queryImage = "SELECT path,_id FROM " + TABLE_IMAGE_NAME + " WHERE schedule_id="+ id;
 
         Cursor cursorImage = sqLiteDatabase.rawQuery(queryImage, null);
-
 
 
         if(cursorImage.getCount() > 0) {
@@ -174,19 +177,15 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
             for(int i=0; i<cursorImage.getCount(); i++){
 
                 ScheduleImage receivedImage = new ScheduleImage();
+
                 receivedImage.setImage(cursorImage.getString(cursorImage.getColumnIndex(COLUMN_IMAGE_PATH)));
                 scheduleImages.add(receivedImage);
+
+                receivedImage.setId(cursorImage.getLong(cursorImage.getColumnIndex(COLUMN_IMAGE_ID)));
 
                 cursorImage.moveToNext();
             }
 
-//            cursorImage.moveToFirst();
-//
-//            ScheduleImage receivedImage = new ScheduleImage();
-//
-//            receivedImage.setImage(cursorImage.getString(cursorImage.getColumnIndex(COLUMN_IMAGE_PATH)));
-//
-//            scheduleImages.add(receivedImage);
         }
 
         return scheduleImages;
@@ -207,9 +206,19 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
     public void deleteImageView(long id, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("DELETE FROM "+TABLE_IMAGE_NAME+" WHERE _id+='"+id+"'");
+        db.execSQL("DELETE FROM "+TABLE_IMAGE_NAME+" WHERE _id='"+id+"'");
 
         Toast.makeText(context, "Deleted successfully.", Toast.LENGTH_SHORT).show();
+
+    }
+
+    /**update record**/
+    public void updateSchedule(long id, Context context, Schedule updatedSchedule) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //you can use the constants above instead of typing the column names
+        db.execSQL("UPDATE  "+TABLE_SCHEDULE_NAME+" SET title ='"+ updatedSchedule.getTitle() + "', content ='" + updatedSchedule.getContent() + "', date ='"+ updatedSchedule.getDate() + "', time ='"+ updatedSchedule.getTime() + "'  WHERE _id='" + id + "'");
+        Toast.makeText(context, "Updated successfully.", Toast.LENGTH_SHORT).show();
 
     }
 

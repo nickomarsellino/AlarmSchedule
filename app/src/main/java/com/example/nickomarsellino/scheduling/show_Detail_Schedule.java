@@ -20,7 +20,7 @@ public class show_Detail_Schedule extends AppCompatActivity {
     @BindView(R.id.container_image) LinearLayout mContainerImage;
 
     //Inisialisasi Atribut
-    private TextView title,content,date;
+    private TextView title,content,date,time;
     private ImageView image;
 
     //Inisialisasi database
@@ -42,6 +42,8 @@ public class show_Detail_Schedule extends AppCompatActivity {
         title = (TextView) findViewById(R.id.detail_Title);
         content = (TextView) findViewById(R.id.detail_Content);
         date = (TextView) findViewById(R.id.detail_Date);
+        time = (TextView) findViewById(R.id.detail_Time);
+
 
         //Harus ada ini
         ButterKnife.bind(this);
@@ -70,6 +72,7 @@ public class show_Detail_Schedule extends AppCompatActivity {
         title.setText(schedule.getTitle());
         content.setText(schedule.getContent());
         date.setText(schedule.getDate());
+        time.setText(schedule.getTime());
 
 
         for(ScheduleImage img: scheduleImage){
