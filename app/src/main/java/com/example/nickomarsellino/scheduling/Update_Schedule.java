@@ -181,7 +181,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                     long test = img.getId();
                     Log.v("test", String.valueOf(test));
 
-//                    dbHelper.deleteImageView(scheduleImg.getId(), Update_Schedule.this);
+                     dbHelper.deleteImageView(test, Update_Schedule.this);
 
                 }
             });

@@ -164,6 +164,8 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         List<ScheduleImage> scheduleImages = new ArrayList<>();
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+
+        //kita juga disini passing id supaya kita bisa delete sesuai yang dipilih
         String queryImage = "SELECT path,_id FROM " + TABLE_IMAGE_NAME + " WHERE schedule_id="+ id;
 
         Cursor cursorImage = sqLiteDatabase.rawQuery(queryImage, null);
