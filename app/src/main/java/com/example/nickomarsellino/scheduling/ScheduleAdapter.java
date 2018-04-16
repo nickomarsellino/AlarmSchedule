@@ -104,7 +104,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
         holder.scheduleTitleTxtV.setText("Title: " + schedule.getTitle());
         holder.scheduleContentxtV.setText("Content: " + schedule.getContent());
-        holder.scheduleDateTxtV.setText(schedule.getDate());
+        holder.scheduleDateTxtV.setText("Reminder For: " +schedule.getDate());
 
 
         holder.layout.setOnClickListener(new View.OnClickListener() {

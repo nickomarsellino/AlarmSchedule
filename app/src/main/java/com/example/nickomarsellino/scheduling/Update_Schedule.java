@@ -459,8 +459,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                 .setNegativeButton("Discard Change", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent in = new Intent(Update_Schedule.this, Home_Page.class);
-                        startActivity(in);
+                        finish();
                     }
                 })
                 .setTitle("WAIT");
