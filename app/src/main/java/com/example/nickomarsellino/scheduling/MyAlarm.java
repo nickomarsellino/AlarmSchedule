@@ -34,7 +34,7 @@ public class MyAlarm extends BroadcastReceiver {
         Schedule schedule = b.getParcelable(EXTRA_SCHEDULE);
 
         String title = schedule.getTitle();
-        String date = schedule.getDate();
+        String date = "Reminder For: "+schedule.getDate();
 
 
         createNotification(context, title, date);

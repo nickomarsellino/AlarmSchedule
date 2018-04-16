@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
@@ -96,6 +97,14 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update__schedule);
 
+        //Insialisasi Untuk FOnt
+        Typeface typeFaceTitle = Typeface.createFromAsset(getAssets(), "Raleway-SemiBold.ttf");
+
+        Typeface typeFaceContent = Typeface.createFromAsset(getAssets(), "Raleway-Light.ttf");
+
+        Typeface typeFaceCalendar = Typeface.createFromAsset(getAssets(), "Raleway-LightItalic.ttf");
+
+        //////////////////////////////////
 
         //Inisialisasi Atribut input
         titleDataUpdate = findViewById(R.id.update_title);
@@ -104,6 +113,11 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         text_TimeUpdate = (TextView) findViewById(R.id.update_time);
         saveButtonUpdate = (Button) findViewById(R.id.button_saveUpdate);
         loadImageUpdate = (FloatingActionButton) findViewById(R.id.fab_create_imageUpdate);
+
+
+        titleDataUpdate.setTypeface(typeFaceTitle);
+        contentDataUpdate.setTypeface(typeFaceContent);
+
 
 
         //Harus ada ini
@@ -126,8 +140,13 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         //Untuk Calender & nampilin Datanya
         titleDataUpdate.setText(schedule.getTitle());
         contentDataUpdate.setText(schedule.getContent());
-        text_TimeUpdate.setText(schedule.getTime());
-        text_CalendarUpdate.setText(schedule.getDate());
+
+        text_TimeUpdate.setTypeface(typeFaceCalendar);
+        text_CalendarUpdate.setTypeface(typeFaceCalendar);
+
+        text_TimeUpdate.setText("Time: "+schedule.getTime());
+        text_CalendarUpdate.setText("Reminder For: "+schedule.getDate());
+
 
 
         for(final ScheduleImage img: scheduleImage){
@@ -196,22 +215,21 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         String calender = schedule.getDate().toString();
 
         String[] separated = calender.split("-");
-        String[] separatedDay = separated[0].split(": ");
 
-        dayUpdate = Integer.parseInt(separatedDay[1]);
-        yearUpdate = Integer.parseInt(separated[2]);
+        yearUpdate = Integer.parseInt(separated[0]);
         monthUpdate = Integer.parseInt(separated[1]);
+        dayUpdate = Integer.parseInt(separated[2]);
 
         //Untuk split si Time sesuai yang dibutuhkan
         String time = schedule.getTime().toString();
 
         String[] separatedTime = time.split(":");
 
-        hourUpdate = Integer.parseInt(separatedTime[1].trim());
-        minuteUpdate = Integer.parseInt(separatedTime[2].trim());
+        hourUpdate = Integer.parseInt(separatedTime[0]);
+        minuteUpdate = Integer.parseInt(separatedTime[1]);
         ////////////////////////////////////////////////////////////////////////////////
 
-        sbPicture = new StringBuilder();
+
 
         //Jika Tombol Add Image Di Tekan
         loadImageUpdate.setOnClickListener(new View.OnClickListener() {
@@ -243,15 +261,14 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     public void saveUpdateImage(){
         String title =  titleDataUpdate.getText().toString().trim();
         String content = contentDataUpdate.getText().toString().trim();
-        String date = text_CalendarUpdate.getText().toString().trim();
-        String time = text_TimeUpdate.getText().toString().trim();
+        String date =  String.valueOf(yearUpdate)+"-"+ String.valueOf(monthUpdate)+"-"+ String.valueOf(dayUpdate);
+        String time = String.valueOf(hourUpdate)+":"+ String.valueOf(minuteUpdate);
 
 
         //Untuk Save Data di tabel Schedule
         Schedule updatedSchedule = new Schedule(title, content, date, time, imgs);
         dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
 
-        Log.v("qwerty", String.valueOf(receivedScheduleId));
 
         //Untuk add gambar baru ke tabel Schedule Image
         //foreach untuk nyimpen datanya sesuai banyak yang dimasukin
@@ -265,9 +282,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         }
 
 
-
         //Untk Set Alarm dari inputan
-
         mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
         mCurrentDate.set(Calendar.MONTH,monthUpdate);
         mCurrentDate.set(Calendar.YEAR,yearUpdate);
@@ -424,7 +439,6 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
         minuteUpdate = minute;
         hourUpdate = hour;
-
     }
 
     ////////////////////////////////////////////////////////////////////////////////

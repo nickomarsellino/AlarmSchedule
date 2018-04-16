@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     private List<Schedule> mScheduleList;
     private Context mContext;
     private RecyclerView mRecyclerV;
+
 
 
 
@@ -81,7 +83,25 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
+
+        //Insialisasi Untuk FOnt
+        Typeface typeFaceTitle = Typeface.createFromAsset(holder.itemView.getContext().getAssets(), "Raleway-SemiBold.ttf");
+
+        Typeface typeFaceContent = Typeface.createFromAsset(holder.itemView.getContext().getAssets(), "Raleway-Light.ttf");
+
+        Typeface typeFaceCalendar = Typeface.createFromAsset(holder.itemView.getContext().getAssets(), "Raleway-LightItalic.ttf");
+
+        //////////////////////////////////
+
+
+
         final Schedule schedule = mScheduleList.get(position);
+
+        holder.scheduleTitleTxtV.setTypeface(typeFaceTitle);
+        holder.scheduleContentxtV.setTypeface(typeFaceContent);
+        holder.scheduleDateTxtV.setTypeface(typeFaceCalendar);
+
+
         holder.scheduleTitleTxtV.setText("Title: " + schedule.getTitle());
         holder.scheduleContentxtV.setText("Content: " + schedule.getContent());
         holder.scheduleDateTxtV.setText(schedule.getDate());

@@ -110,7 +110,8 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
     public List<Schedule> schedulesList() {
         String query;
 
-        query = "SELECT  * FROM " + TABLE_SCHEDULE_NAME;
+        String column = COLUMN_SCHEDULE_DATE+","+ COLUMN_SCHEDULE_TIME;
+        query = "SELECT  * FROM " + TABLE_SCHEDULE_NAME + " ORDER BY "+ column;
 
         List<Schedule> ScheduleLinkedList = new LinkedList<>();
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();

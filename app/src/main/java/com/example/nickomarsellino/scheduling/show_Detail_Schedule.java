@@ -1,5 +1,6 @@
 package com.example.nickomarsellino.scheduling;
 
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -37,6 +38,14 @@ public class show_Detail_Schedule extends AppCompatActivity {
         setContentView(R.layout.activity_show__detail__schedule);
 
 
+        //Insialisasi Untuk FOnt
+        Typeface typeFaceTitle = Typeface.createFromAsset(getAssets(), "Raleway-SemiBold.ttf");
+
+        Typeface typeFaceContent = Typeface.createFromAsset(getAssets(), "Raleway-Light.ttf");
+
+        Typeface typeFaceCalendar = Typeface.createFromAsset(getAssets(), "Raleway-LightItalic.ttf");
+
+        //////////////////////////////////
 
         //Inisialisasi
         title = (TextView) findViewById(R.id.detail_Title);
@@ -44,13 +53,15 @@ public class show_Detail_Schedule extends AppCompatActivity {
         date = (TextView) findViewById(R.id.detail_Date);
         time = (TextView) findViewById(R.id.detail_Time);
 
+        title.setTypeface(typeFaceTitle);
+        content.setTypeface(typeFaceContent);
+        date.setTypeface(typeFaceCalendar);
+        time.setTypeface(typeFaceCalendar);
 
         //Harus ada ini
         ButterKnife.bind(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(800, 400);
         params.setMargins(0, 50, 0, 50);
-
-
 
 
         dbHelper = new ScheduleDBHelper(this);
@@ -69,8 +80,8 @@ public class show_Detail_Schedule extends AppCompatActivity {
 
 
         //nampilin Datanya
-        title.setText(schedule.getTitle());
-        content.setText(schedule.getContent());
+        title.setText("Title : "+schedule.getTitle());
+        content.setText("Content : \n"+schedule.getContent());
         date.setText(schedule.getDate());
         time.setText(schedule.getTime());
 

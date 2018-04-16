@@ -2,6 +2,7 @@ package com.example.nickomarsellino.scheduling;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 public class Home_Page extends AppCompatActivity {
 
@@ -23,17 +25,26 @@ public class Home_Page extends AppCompatActivity {
 
     //Inisialisasi Untuk Buttonnya
     private FloatingActionButton createSchedule;
+    private TextView title;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        //Insialisasi Untuk FOnt
+        Typeface typeFaceTitle = Typeface.createFromAsset(getAssets(), "Raleway-SemiBold.ttf");
+
+        //////////////////////////////////
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home__page);
 
         //Inisialisasi Buttonya
         createSchedule = (FloatingActionButton) findViewById(R.id.fab_create_schedule);
+
+        title = (TextView) findViewById(R.id.textView);
+        title.setTypeface(typeFaceTitle);
+
 
         createSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
