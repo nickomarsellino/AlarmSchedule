@@ -101,14 +101,20 @@
                     />
 
 
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:id="@+id/container_image"
+                        android:layout_margin="0dp"
                         />
+
+                </HorizontalScrollView>
 
 
             </LinearLayout>

@@ -4,6 +4,8 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -60,8 +62,7 @@ public class show_Detail_Schedule extends AppCompatActivity {
 
         //Harus ada ini
         ButterKnife.bind(this);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(800, 400);
-        params.setMargins(0, 50, 0, 50);
+
 
 
         dbHelper = new ScheduleDBHelper(this);
@@ -77,29 +78,49 @@ public class show_Detail_Schedule extends AppCompatActivity {
         List<ScheduleImage> scheduleImage = dbHelper.getScheduleImage(receivedScheduleId);
 
 
-
-
         //nampilin Datanya
         title.setText("Title : "+schedule.getTitle());
         content.setText("Content : \n"+schedule.getContent());
-        date.setText(schedule.getDate());
-        time.setText(schedule.getTime());
+        date.setText("Reminder For: "+schedule.getDate());
+        time.setText("Time: "+schedule.getTime());
 
 
-        for(ScheduleImage img: scheduleImage){
 
+        for(final ScheduleImage img: scheduleImage){
+
+            //Bikin Image View secara programaticly
             ImageView ivPicture = new ImageView(this);
+
+            LinearLayout.LayoutParams paramImg = new LinearLayout.LayoutParams(400, 400);
+            paramImg.setMargins(0, 50, 0, 50);
+
+            //Untuk COntainer di gambar dan tombol delete
+            final LinearLayout ContainerImageData = new LinearLayout(show_Detail_Schedule.this);
+            ContainerImageData.setOrientation(LinearLayout.HORIZONTAL);
+
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            param.setMargins(0, 0, 0, 50);
+
+
             Uri uriFromPath = Uri.fromFile(new File(img.getImage()));
-            ivPicture.setLayoutParams(params);
+            ivPicture.setLayoutParams(paramImg);
             ivPicture.setImageURI(uriFromPath);
 
-            mContainerImage.addView(ivPicture);
+            ContainerImageData.addView(ivPicture);
+            mContainerImage.addView(ContainerImageData, param);
+
+
+            ContainerImageData.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    long test = img.getId();
+                    Log.v("test", String.valueOf(test));
+                }
+            });
+
+
+
         }
-
-
-//        Uri uriFromPath = Uri.fromFile(new File(schedule.getImage()));
-//
-//        image.setImageURI(uriFromPath);
 
     }
 
