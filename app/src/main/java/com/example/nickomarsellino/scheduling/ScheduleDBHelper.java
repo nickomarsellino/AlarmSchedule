@@ -135,7 +135,24 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         return ScheduleLinkedList;
     }
 
+    public ScheduleImage getImageData(long id) {
 
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        String query = "SELECT "+COLUMN_IMAGE_PATH+" FROM " + TABLE_IMAGE_NAME + " WHERE _id="+ id;
+
+        Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+
+        ScheduleImage receivedImage = new ScheduleImage();
+
+        int idx = cursor.getColumnIndex(COLUMN_IMAGE_PATH);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            receivedImage.setImage(cursor.getString(idx));
+        }
+        return receivedImage;
+
+    }
 
     /**Query untuk nampilin detail sesuai yang dipilih**/
     public Schedule getSchedule(long id){
@@ -203,6 +220,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         Toast.makeText(context, "Deleted successfully.", Toast.LENGTH_SHORT).show();
 
     }
+
 
     public void deleteImageView(long id, Context context) {
         SQLiteDatabase db = this.getWritableDatabase();

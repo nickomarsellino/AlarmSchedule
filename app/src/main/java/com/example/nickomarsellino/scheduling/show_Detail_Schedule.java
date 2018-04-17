@@ -1,5 +1,7 @@
 package com.example.nickomarsellino.scheduling;
 
+import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -29,8 +31,6 @@ public class show_Detail_Schedule extends AppCompatActivity {
     //Inisialisasi database
     private ScheduleDBHelper dbHelper;
     private long receivedScheduleId;
-
-
 
 
 
@@ -99,7 +99,7 @@ public class show_Detail_Schedule extends AppCompatActivity {
             ContainerImageData.setOrientation(LinearLayout.HORIZONTAL);
 
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            param.setMargins(0, 0, 0, 50);
+            param.setMargins(10, 0, 10, 50);
 
 
             Uri uriFromPath = Uri.fromFile(new File(img.getImage()));
@@ -115,6 +115,10 @@ public class show_Detail_Schedule extends AppCompatActivity {
                 public void onClick(View view) {
                     long test = img.getId();
                     Log.v("test", String.valueOf(test));
+
+                    goViewActivity(img.getId());
+
+
                 }
             });
 
@@ -124,5 +128,13 @@ public class show_Detail_Schedule extends AppCompatActivity {
 
     }
 
+
+    //untuk pindah ke ativity popup
+    private void goViewActivity(long id) {
+
+        Intent goToView = new Intent(getApplicationContext(), popUpImage.class);
+        goToView.putExtra("IMAGE_ID", id);
+        startActivity(goToView);
+    }
 
 }
