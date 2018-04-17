@@ -7,12 +7,13 @@
     android:background="@drawable/gradient"
     tools:context=".popUpImage">
 
-    <ImageView
+
+    <com.github.chrisbanes.photoview.PhotoView
+        android:id="@+id/imgData"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
         android:src="@mipmap/ic_launcher"
-        android:id="@+id/imgData"
         />
 
 

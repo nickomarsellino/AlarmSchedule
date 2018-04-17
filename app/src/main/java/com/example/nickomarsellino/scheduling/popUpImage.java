@@ -8,6 +8,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.github.chrisbanes.photoview.PhotoView;
+
 import java.io.File;
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class popUpImage extends Activity {
 
 
         //inisialisasi
-        imageView = (ImageView) findViewById(R.id.imgData);
+        PhotoView photoView = (PhotoView) findViewById(R.id.imgData);
 
 
         //Untuk get Id yang dilempar dari show_Detail_Schedule.java
@@ -44,7 +46,7 @@ public class popUpImage extends Activity {
         ScheduleImage scheduleImage = (ScheduleImage) dbHelper.getImageData(receivedImageId);
 
         Uri uriFromPath = Uri.fromFile(new File(scheduleImage.getImage()));
-        imageView.setImageURI(uriFromPath);
+        photoView.setImageURI(uriFromPath);
 
 
 
