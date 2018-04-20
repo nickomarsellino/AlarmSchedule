@@ -147,8 +147,6 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         text_TimeUpdate.setText("Time: "+schedule.getTime());
         text_CalendarUpdate.setText("Reminder For: "+schedule.getDate());
 
-        Log.v("testing", String.valueOf(schedule.getId()));
-
 
 
         for(final ScheduleImage img: scheduleImage){
@@ -292,13 +290,15 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         mCurrentDate.set(Calendar.SECOND,0);
 
 
+        final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+
 
         Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
         Bundle args = new Bundle();
         args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
         intent.putExtra("a", args);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, getAlarmId(Update_Schedule.this), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
 
