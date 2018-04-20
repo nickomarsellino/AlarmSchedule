@@ -24,13 +24,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.io.Console;
 import java.io.File;
@@ -50,9 +54,10 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
 
     //Inisialisasi Atribut input
-    EditText titleDataUpdate, contentDataUpdate;
+    EditText titleDataUpdate, contentDataUpdate, inputMinute;
     Button saveButtonUpdate;
     FloatingActionButton loadImageUpdate;
+    Spinner spinReminder;
     /////////////////////////////////////////////////////
 
     private final static int REQ_PERMISSION = 1;
@@ -69,7 +74,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     TextView text_CalendarUpdate;
     TextView text_TimeUpdate;
     Calendar mCurrentDate;
-    int dayUpdate, monthUpdate, yearUpdate, hourUpdate, minuteUpdate;
+    int dayUpdate, monthUpdate, yearUpdate, hourUpdate, minuteUpdate, remindTime;
     /////////////////////////////////////////////////////
 
     //Untuk Notifikasi
@@ -90,6 +95,12 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     private List<Button> delete_imgsUpdate = new ArrayList<Button>();
     //
 
+
+    //Untuk SPinner Reminder
+    String Reminder [] = {"Hour", "Day"};
+    ArrayAdapter<String> adapter;
+    String flagString;
+    //
 
 
     @Override
@@ -112,8 +123,13 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         text_CalendarUpdate = (TextView) findViewById(R.id.update_reminder);
         text_TimeUpdate = (TextView) findViewById(R.id.update_time);
         saveButtonUpdate = (Button) findViewById(R.id.button_saveUpdate);
+        inputMinute = (EditText) findViewById(R.id.input_minute);
         loadImageUpdate = (FloatingActionButton) findViewById(R.id.fab_create_imageUpdate);
 
+
+        spinReminder = (Spinner) findViewById(R.id.spinReminder);
+        adapter = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, Reminder);
+        spinReminder.setAdapter(adapter);
 
         titleDataUpdate.setTypeface(typeFaceTitle);
         contentDataUpdate.setTypeface(typeFaceContent);
@@ -146,6 +162,31 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
         text_TimeUpdate.setText("Time: "+schedule.getTime());
         text_CalendarUpdate.setText("Reminder For: "+schedule.getDate());
+
+
+
+        //Untuk ngecek apakah spinnernya diilih atau tidak
+        spinReminder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                switch (position)
+                {
+                    case 0:
+                        Log.v("test", "Hour");
+                        flagString = "hour";
+                        break;
+                    case 1:
+                        Log.v("test", "Day");
+                        flagString = "day";
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
 
 
@@ -262,6 +303,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         String content = contentDataUpdate.getText().toString().trim();
         String date =  String.valueOf(yearUpdate)+"-"+ String.valueOf(monthUpdate)+"-"+ String.valueOf(dayUpdate);
         String time = String.valueOf(hourUpdate)+":"+ String.valueOf(minuteUpdate);
+        remindTime = Integer.parseInt(inputMinute.getText().toString().trim());
 
 
         //Untuk Save Data di tabel Schedule
@@ -281,38 +323,69 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         }
 
 
-        //Untk Set Alarm dari inputan
-        mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
-        mCurrentDate.set(Calendar.MONTH,monthUpdate);
-        mCurrentDate.set(Calendar.YEAR,yearUpdate);
-        mCurrentDate.set(Calendar.HOUR_OF_DAY,hourUpdate);
-        mCurrentDate.set(Calendar.MINUTE,minuteUpdate);
-        mCurrentDate.set(Calendar.SECOND,0);
+        if(flagString.equals("hour")){
+            if(remindTime > 0 || remindTime < 25){
+                //Untuk masang Alarm dari inputan
+                mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
+                mCurrentDate.set(Calendar.MONTH,monthUpdate);
+                mCurrentDate.set(Calendar.YEAR,yearUpdate);
+                mCurrentDate.set(Calendar.HOUR_OF_DAY,hourUpdate - remindTime);
+                mCurrentDate.set(Calendar.MINUTE,minuteUpdate);
+                mCurrentDate.set(Calendar.SECOND,0);
 
 
-        final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+                final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
 
 
-        Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
-        Bundle args = new Bundle();
-        args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
-        intent.putExtra("a", args);
+                Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                Bundle args = new Bundle();
+                args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                intent.putExtra("a", args);
 
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
 
-        startActivity(new Intent(Update_Schedule.this, Home_Page.class));
+                startActivity(new Intent(Update_Schedule.this, Home_Page.class));
+            }
+            else{
+                Toast.makeText(this, "Please Change To Day", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        else if (flagString.equals("day")){
+            if(remindTime < 0) {
+                //Untuk masang Alarm dari inputan
+                mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate - remindTime);
+                mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                mCurrentDate.set(Calendar.HOUR_OF_DAY, hourUpdate);
+                mCurrentDate.set(Calendar.MINUTE, minuteUpdate);
+                mCurrentDate.set(Calendar.SECOND, 0);
+
+
+                final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+
+
+                Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                Bundle args = new Bundle();
+                args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                intent.putExtra("a", args);
+
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+
+                startActivity(new Intent(Update_Schedule.this, Home_Page.class));
+            }
+            else{
+                Toast.makeText(this, "Please Change To Day", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
 
-    public static int getAlarmId(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        int alarmId = preferences.getInt("ALARM", 1);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("ALARM", alarmId + 1).apply();
-        return alarmId;
-    }
+
 
     //Minta Permission Untuk akses ke gallery
     public void reqPermission(){
