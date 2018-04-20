@@ -39,4 +39,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:26.0.+"
 
 
+    implementation 'com.google.android.gms:play-services-ads:15.0.0'
 }

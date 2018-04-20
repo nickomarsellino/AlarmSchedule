@@ -147,6 +147,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         text_TimeUpdate.setText("Time: "+schedule.getTime());
         text_CalendarUpdate.setText("Reminder For: "+schedule.getDate());
 
+        Log.v("testing", String.valueOf(schedule.getId()));
+
 
 
         for(final ScheduleImage img: scheduleImage){
@@ -200,7 +202,6 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
 
                     long test = img.getId();
-                    Log.v("test", String.valueOf(test));
 
                     dbHelper.deleteImageView(test, Update_Schedule.this);
 

@@ -166,6 +166,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         if(cursor.getCount() > 0) {
             cursor.moveToFirst();
 
+            receivedSchedule.setId(Long.parseLong(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_ID))));
             receivedSchedule.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TITLE)));
             receivedSchedule.setContent(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_CONTENT)));
             receivedSchedule.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_DATE)));
