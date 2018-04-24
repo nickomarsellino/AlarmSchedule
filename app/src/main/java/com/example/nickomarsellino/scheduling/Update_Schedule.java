@@ -75,6 +75,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     TextView text_TimeUpdate;
     Calendar mCurrentDate;
     int dayUpdate, monthUpdate, yearUpdate, hourUpdate, minuteUpdate, remindTime;
+    int dayCurrent, monthCurrent, yearCurrent, hourCurrent, minuteCurrent;
     /////////////////////////////////////////////////////
 
     //Untuk Notifikasi
@@ -115,6 +116,18 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
         Typeface typeFaceCalendar = Typeface.createFromAsset(getAssets(), "Raleway-LightItalic.ttf");
         //////////////////////////////////
+
+
+        mCurrentDate = Calendar.getInstance();
+
+        //get current date and time for validation
+        dayCurrent = mCurrentDate.get(Calendar.DAY_OF_MONTH);
+        monthCurrent = mCurrentDate.get(Calendar.MONTH);
+        yearCurrent = mCurrentDate.get(Calendar.YEAR);
+        hourCurrent = mCurrentDate.get(Calendar.HOUR_OF_DAY);
+        minuteCurrent = mCurrentDate.get(Calendar.MINUTE);
+
+
 
 
         //Inisialisasi Atribut input
@@ -249,8 +262,6 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         }
 
 
-
-        mCurrentDate = Calendar.getInstance();
         //Untuk split si Tanggal sesuai yang dibutuhkan
         String calender = schedule.getDate().toString();
 
@@ -332,27 +343,28 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                     dbHelper.saveNewScheduleImage(scheduleImage);
                 }
 
-
-                //Untuk masang Alarm dari inputan
-                mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
-                mCurrentDate.set(Calendar.MONTH,monthUpdate);
-                mCurrentDate.set(Calendar.YEAR,yearUpdate);
-                mCurrentDate.set(Calendar.HOUR_OF_DAY,hourUpdate - remindTime);
-                mCurrentDate.set(Calendar.MINUTE,minuteUpdate);
-                mCurrentDate.set(Calendar.SECOND,0);
-
-
-                final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+                if(yearCurrent <= yearUpdate && monthCurrent <= monthUpdate && hourCurrent <= (hourUpdate-remindTime)){
+                    //Untuk masang Alarm dari inputan
+                    mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
+                    mCurrentDate.set(Calendar.MONTH,monthUpdate);
+                    mCurrentDate.set(Calendar.YEAR,yearUpdate);
+                    mCurrentDate.set(Calendar.HOUR_OF_DAY,hourUpdate - remindTime);
+                    mCurrentDate.set(Calendar.MINUTE,minuteUpdate);
+                    mCurrentDate.set(Calendar.SECOND,0);
 
 
-                Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
-                Bundle args = new Bundle();
-                args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
-                intent.putExtra("a", args);
+                    final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+
+                    Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                    Bundle args = new Bundle();
+                    args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                    intent.putExtra("a", args);
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                }
 
                 startActivity(new Intent(Update_Schedule.this, Home_Page.class));
             }
@@ -384,26 +396,28 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                 }
 
 
-                //Untuk masang Alarm dari inputan
-                mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate - remindTime);
-                mCurrentDate.set(Calendar.MONTH, monthUpdate);
-                mCurrentDate.set(Calendar.YEAR, yearUpdate);
-                mCurrentDate.set(Calendar.HOUR_OF_DAY, hourUpdate);
-                mCurrentDate.set(Calendar.MINUTE, minuteUpdate);
-                mCurrentDate.set(Calendar.SECOND, 0);
+                if(yearCurrent <= yearUpdate && monthCurrent <= monthUpdate && dayCurrent <= (dayUpdate-remindTime)) {
+                    //Untuk masang Alarm dari inputan
+                    mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate - remindTime);
+                    mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                    mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                    mCurrentDate.set(Calendar.HOUR_OF_DAY, hourUpdate);
+                    mCurrentDate.set(Calendar.MINUTE, minuteUpdate);
+                    mCurrentDate.set(Calendar.SECOND, 0);
 
 
-                final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+                    final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
 
 
-                Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
-                Bundle args = new Bundle();
-                args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
-                intent.putExtra("a", args);
+                    Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                    Bundle args = new Bundle();
+                    args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                    intent.putExtra("a", args);
 
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                    alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                }
 
                 startActivity(new Intent(Update_Schedule.this, Home_Page.class));
             }
