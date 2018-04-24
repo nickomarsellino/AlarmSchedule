@@ -31,6 +31,7 @@ public class Home_Page extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
         //Insialisasi Untuk FOnt
         Typeface typeFaceTitle = Typeface.createFromAsset(getAssets(), "Raleway-SemiBold.ttf");
 

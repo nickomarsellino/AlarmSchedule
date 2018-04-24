@@ -29,16 +29,44 @@
             android:enabled="true"
             android:exported="true">
 
-            <intent-filter>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <category android:name="android.intent.category.HOME" />
 
-                <!--For HTC devices-->
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+            <!--</intent-filter>-->
+
+            <!--&lt;!&ndash;<intent-filter>&ndash;&gt;-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.DEFAULT"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.BOOT_COMPLETED"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<action android:name="android.intent.action.QUICKBOOT_POWERON"/>&ndash;&gt;-->
+                <!--&lt;!&ndash;<category android:name="android.intent.category.HOME" />&ndash;&gt;-->
+
+                <!--&lt;!&ndash;&lt;!&ndash;For HTC devices&ndash;&gt;&ndash;&gt;-->
+                <!--&lt;!&ndash;<action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>&ndash;&gt;-->
+            <!--&lt;!&ndash;</intent-filter>&ndash;&gt;-->
         </receiver>
+
+        <receiver
+            android:name=".MyAlarmBooting"
+            android:enabled="true"
+            android:exported="true">
+            s
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+
+            <!--<intent-filter>-->
+            <!--<category android:name="android.intent.category.DEFAULT"/>-->
+            <!--<action android:name="android.intent.action.BOOT_COMPLETED"/>-->
+            <!--<action android:name="android.intent.action.QUICKBOOT_POWERON"/>-->
+            <!--<category android:name="android.intent.category.HOME" />-->
+
+            <!--&lt;!&ndash;For HTC devices&ndash;&gt;-->
+            <!--<action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>-->
+            <!--</intent-filter>-->
+        </receiver>
+
+
+
 
         <activity android:name=".Update_Schedule" />
         <activity android:name=".popUpImage" android:theme="@style/AppTheme.PopImage"></activity>

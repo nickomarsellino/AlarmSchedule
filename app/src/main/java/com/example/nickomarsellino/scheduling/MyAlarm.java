@@ -36,9 +36,7 @@ public class MyAlarm extends BroadcastReceiver {
         String title = schedule.getTitle();
         String date = "Reminder For: "+schedule.getDate();
 
-
         createNotification(context, title, date);
-
     }
 
     public void createNotification(Context context, String title, String date) {

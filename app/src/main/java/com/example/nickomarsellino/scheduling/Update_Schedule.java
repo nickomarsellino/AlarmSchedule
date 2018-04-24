@@ -114,8 +114,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         Typeface typeFaceContent = Typeface.createFromAsset(getAssets(), "Raleway-Light.ttf");
 
         Typeface typeFaceCalendar = Typeface.createFromAsset(getAssets(), "Raleway-LightItalic.ttf");
-
         //////////////////////////////////
+
 
         //Inisialisasi Atribut input
         titleDataUpdate = findViewById(R.id.update_title);
@@ -304,27 +304,35 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         String date =  String.valueOf(yearUpdate)+"-"+ String.valueOf(monthUpdate)+"-"+ String.valueOf(dayUpdate);
         String time = String.valueOf(hourUpdate)+":"+ String.valueOf(minuteUpdate);
         remindTime = Integer.parseInt(inputMinute.getText().toString().trim());
+        String reminder;
 
 
-        //Untuk Save Data di tabel Schedule
-        Schedule updatedSchedule = new Schedule(title, content, date, time, imgs);
-        dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
-
-
-        //Untuk add gambar baru ke tabel Schedule Image
-        //foreach untuk nyimpen datanya sesuai banyak yang dimasukin
-        for(String img:updatedSchedule.getImages()){
-
-            ScheduleImage scheduleImage = new ScheduleImage();
-            scheduleImage.setIdSchedule(receivedScheduleId);
-            scheduleImage.setImage(img);
-
-            dbHelper.saveNewScheduleImage(scheduleImage);
-        }
 
 
         if(flagString.equals("hour")){
-            if(remindTime > 0 || remindTime < 25){
+            if(remindTime > 0 && remindTime < 24){
+
+
+                reminder = remindTime + " hour";
+
+                //Untuk Save Data di tabel Schedule
+
+                Schedule updatedSchedule = new Schedule(title, content, reminder, date, time, imgs);
+                dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
+
+
+                //Untuk add gambar baru ke tabel Schedule Image
+                //foreach untuk nyimpen datanya sesuai banyak yang dimasukin
+                for(String img:updatedSchedule.getImages()){
+
+                    ScheduleImage scheduleImage = new ScheduleImage();
+                    scheduleImage.setIdSchedule(receivedScheduleId);
+                    scheduleImage.setImage(img);
+
+                    dbHelper.saveNewScheduleImage(scheduleImage);
+                }
+
+
                 //Untuk masang Alarm dari inputan
                 mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
                 mCurrentDate.set(Calendar.MONTH,monthUpdate);
@@ -354,7 +362,28 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         }
 
         else if (flagString.equals("day")){
-            if(remindTime < 0) {
+            if(remindTime > 0) {
+
+                reminder = remindTime + " day";
+
+                //Untuk Save Data di tabel Schedule
+
+                Schedule updatedSchedule = new Schedule(title, content, reminder, date, time, imgs);
+                dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
+
+
+                //Untuk add gambar baru ke tabel Schedule Image
+                //foreach untuk nyimpen datanya sesuai banyak yang dimasukin
+                for(String img:updatedSchedule.getImages()){
+
+                    ScheduleImage scheduleImage = new ScheduleImage();
+                    scheduleImage.setIdSchedule(receivedScheduleId);
+                    scheduleImage.setImage(img);
+
+                    dbHelper.saveNewScheduleImage(scheduleImage);
+                }
+
+
                 //Untuk masang Alarm dari inputan
                 mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate - remindTime);
                 mCurrentDate.set(Calendar.MONTH, monthUpdate);

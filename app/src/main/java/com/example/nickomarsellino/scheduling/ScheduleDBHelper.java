@@ -29,6 +29,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
     public static final String COLUMN_SCHEDULE_CONTENT = "content";
     public static final String COLUMN_SCHEDULE_DATE = "date";
     public static final String COLUMN_SCHEDULE_TIME= "time";
+    public static final String COLUMN_SCHEDULE_REMINDER= "reminder";
 
 
 
@@ -49,13 +50,12 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
-
-
         //Ini Untuk Schedule Table
         sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_SCHEDULE_NAME + " (" +
                 COLUMN_SCHEDULE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_SCHEDULE_TITLE + " TEXT NOT NULL, " +
                 COLUMN_SCHEDULE_CONTENT + " TEXT NOT NULL, " +
+                COLUMN_SCHEDULE_REMINDER + " TEXT NOT NULL, " +
                 COLUMN_SCHEDULE_TIME + " TEXT NOT NULL, " +
                 COLUMN_SCHEDULE_DATE+ " TEXT NOT NULL);"
         );
@@ -84,8 +84,10 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
 
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+
         values.put(COLUMN_SCHEDULE_TITLE, schedule.getTitle());
         values.put(COLUMN_SCHEDULE_CONTENT, schedule.getContent());
+        values.put(COLUMN_SCHEDULE_REMINDER, schedule.getReminder());
         values.put(COLUMN_SCHEDULE_DATE, schedule.getDate());
         values.put(COLUMN_SCHEDULE_TIME, schedule.getTime());
 
@@ -126,6 +128,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
                 schedule.setId(cursor.getLong(cursor.getColumnIndex(COLUMN_SCHEDULE_ID)));
                 schedule.setTitle(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TITLE)));
                 schedule.setContent(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_CONTENT)));
+                schedule.setReminder(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_REMINDER)));
                 schedule.setTime(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_TIME)));
                 schedule.setDate(cursor.getString(cursor.getColumnIndex(COLUMN_SCHEDULE_DATE)));
                 ScheduleLinkedList.add(schedule);
@@ -237,7 +240,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         //you can use the constants above instead of typing the column names
-        db.execSQL("UPDATE  "+TABLE_SCHEDULE_NAME+" SET title ='"+ updatedSchedule.getTitle() + "', content ='" + updatedSchedule.getContent() + "', date ='"+ updatedSchedule.getDate() + "', time ='"+ updatedSchedule.getTime() + "'  WHERE _id='" + id + "'");
+        db.execSQL("UPDATE  "+TABLE_SCHEDULE_NAME+" SET title ='"+ updatedSchedule.getTitle() + "', content ='" + updatedSchedule.getContent() + "',reminder ='"+ updatedSchedule.getReminder() + "', date ='"+ updatedSchedule.getDate() + "', time ='"+ updatedSchedule.getTime() + "'  WHERE _id='" + id + "'");
         Toast.makeText(context, "Updated successfully.", Toast.LENGTH_SHORT).show();
 
     }
