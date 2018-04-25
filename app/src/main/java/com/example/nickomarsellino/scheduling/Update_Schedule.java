@@ -76,6 +76,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     Calendar mCurrentDate;
     int dayUpdate, monthUpdate, yearUpdate, hourUpdate, minuteUpdate, remindTime;
     int dayCurrent, monthCurrent, yearCurrent, hourCurrent, minuteCurrent;
+    int minuteFlag;
+    int hourFlag;
     /////////////////////////////////////////////////////
 
     //Untuk Notifikasi
@@ -98,7 +100,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
 
     //Untuk SPinner Reminder
-    String Reminder [] = {"Hour", "Day"};
+    String Reminder [] = {"Hour", "Day", "Minute"};
     ArrayAdapter<String> adapter;
     String flagString;
     //
@@ -185,12 +187,13 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                 switch (position)
                 {
                     case 0:
-                        Log.v("test", "Hour");
                         flagString = "hour";
                         break;
                     case 1:
-                        Log.v("test", "Day");
                         flagString = "day";
+                        break;
+                    case 2:
+                        flagString = "minute";
                         break;
                 }
             }
@@ -323,7 +326,6 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         if(flagString.equals("hour")){
             if(remindTime > 0 && remindTime < 24){
 
-
                 reminder = remindTime + " hour";
 
                 //Untuk Save Data di tabel Schedule
@@ -425,6 +427,151 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                 Toast.makeText(this, "Please Change To Day", Toast.LENGTH_SHORT).show();
             }
         }
+
+
+        else if (flagString.equals("minute")){
+            if(remindTime > 0) {
+
+                reminder = remindTime + " minute";
+
+                //Untuk Save Data di tabel Schedule
+                Schedule updatedSchedule = new Schedule(title, content, reminder, date, time, imgs);
+                dbHelper.updateSchedule(receivedScheduleId, Update_Schedule.this,  updatedSchedule);
+
+
+                //Untuk add gambar baru ke tabel Schedule Image
+                //foreach untuk nyimpen datanya sesuai banyak yang dimasukin
+                for(String img:updatedSchedule.getImages()){
+
+                    ScheduleImage scheduleImage = new ScheduleImage();
+                    scheduleImage.setIdSchedule(receivedScheduleId);
+                    scheduleImage.setImage(img);
+
+                    dbHelper.saveNewScheduleImage(scheduleImage);
+                }
+
+
+                if(yearCurrent <= yearUpdate && monthCurrent <= monthUpdate) {
+
+                    minuteFlag = minuteUpdate-remindTime;
+
+                    //Jika ia memilih minute tetapui di tangal yg sama
+                    if(dayCurrent == dayUpdate){
+
+                        //jika hasil input menit bisa merubah jam
+                        if(minuteFlag < 0){
+                            hourFlag = hourUpdate - 1;
+                            minuteUpdate = 60 + minuteFlag;
+
+                            if(hourCurrent <= hourFlag){
+                                if(minuteCurrent <= minuteUpdate){
+                                    //Untuk masang Alarm dari inputan
+                                    mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                                    mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                                    mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                                    mCurrentDate.set(Calendar.HOUR_OF_DAY, hourFlag);
+                                    mCurrentDate.set(Calendar.MINUTE, minuteUpdate);
+                                    mCurrentDate.set(Calendar.SECOND, 0);
+
+
+                                    final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+
+
+                                    Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                                    Bundle args = new Bundle();
+                                    args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                                    intent.putExtra("a", args);
+
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                                    alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                                }
+                            }
+                        }
+
+                        else{
+                            if(minuteCurrent <= minuteFlag){
+                                //Untuk masang Alarm dari inputan
+                                mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                                mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                                mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                                mCurrentDate.set(Calendar.HOUR_OF_DAY, hourUpdate);
+                                mCurrentDate.set(Calendar.MINUTE, minuteFlag);
+                                mCurrentDate.set(Calendar.SECOND, 0);
+
+                                final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+
+
+                                Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                                Bundle args = new Bundle();
+                                args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                                intent.putExtra("a", args);
+
+                                PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                                alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                            }
+                        }
+                    }
+
+                    //Jika dia milih jam reminder di tanggal yang lebih lama dari hari
+                    else if(dayUpdate > dayCurrent){
+                        if(minuteFlag < 0){
+                            //Untuk Validasi itungan menit
+                            hourFlag = hourUpdate - 1;
+                            minuteUpdate = 60 + minuteFlag;
+
+                            //Untuk masang Alarm dari inputan
+                            mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                            mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                            mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                            mCurrentDate.set(Calendar.HOUR_OF_DAY, hourFlag);
+                            mCurrentDate.set(Calendar.MINUTE, minuteUpdate);
+                            mCurrentDate.set(Calendar.SECOND, 0);
+
+                            final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+
+
+                            Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                            Bundle args = new Bundle();
+                            args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                            intent.putExtra("a", args);
+
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                            alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                        }
+                        else {
+                            //Untuk masang Alarm dari inputan
+                            mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                            mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                            mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                            mCurrentDate.set(Calendar.HOUR_OF_DAY, hourUpdate);
+                            mCurrentDate.set(Calendar.MINUTE, minuteFlag);
+                            mCurrentDate.set(Calendar.SECOND, 0);
+
+                            final Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
+
+
+                            Intent intent = new Intent(Update_Schedule.this, MyAlarm.class);
+                            Bundle args = new Bundle();
+                            args.putParcelable(MyAlarm.EXTRA_SCHEDULE, updatedSchedule);
+                            intent.putExtra("a", args);
+
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(Update_Schedule.this, (int) schedule.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            AlarmManager alarmMgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                            alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                        }
+                    }
+                }
+                startActivity(new Intent(Update_Schedule.this, Home_Page.class));
+            }
+            else{
+                Toast.makeText(this, "Please Change To Day", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
     }
 
 
