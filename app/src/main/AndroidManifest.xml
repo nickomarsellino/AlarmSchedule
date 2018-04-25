@@ -49,7 +49,7 @@
             android:name=".MyAlarmBooting"
             android:enabled="true"
             android:exported="true">
-            s
+
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>

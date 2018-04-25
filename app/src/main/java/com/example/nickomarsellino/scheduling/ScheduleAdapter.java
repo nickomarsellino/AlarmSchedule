@@ -1,6 +1,8 @@
 package com.example.nickomarsellino.scheduling;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -128,8 +130,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                         dbHelper.deleteSchedule(schedule.getId(), mContext);
 
 
+                        Intent myIntent = new Intent(mContext, MyAlarm.class);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, (int) schedule.getId(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
+
+                        alarmManager.cancel(pendingIntent);
+
                         mScheduleList.remove(position);
-                        mRecyclerV.removeViewAt(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mScheduleList.size());
                         notifyDataSetChanged();
