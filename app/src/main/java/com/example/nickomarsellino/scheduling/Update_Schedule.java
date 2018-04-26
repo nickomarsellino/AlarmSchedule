@@ -345,7 +345,7 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                     dbHelper.saveNewScheduleImage(scheduleImage);
                 }
 
-                if(yearCurrent <= yearUpdate && monthCurrent <= monthUpdate && hourCurrent <= (hourUpdate-remindTime)){
+                if(yearCurrent <= yearUpdate && monthCurrent <= monthUpdate && dayCurrent<= dayUpdate && hourCurrent <= (hourUpdate-remindTime) && minuteCurrent <= minuteUpdate){
                     //Untuk masang Alarm dari inputan
                     mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
                     mCurrentDate.set(Calendar.MONTH,monthUpdate);
