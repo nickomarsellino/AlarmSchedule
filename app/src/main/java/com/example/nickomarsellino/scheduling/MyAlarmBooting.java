@@ -23,6 +23,9 @@ public class MyAlarmBooting extends BroadcastReceiver {
     String reminderTime;
     int dayCurrent, monthCurrent, yearCurrent, hourCurrent, minuteCurrent;
 
+    int minuteFlag;
+    int hourFlag;
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -116,28 +119,114 @@ public class MyAlarmBooting extends BroadcastReceiver {
                         alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
                     }
                 }
-            }
 
-            else if(yearCurrent <= yearUpdate && monthCurrent <= monthUpdate && dayCurrent <= dayUpdate){
+
+
+
+                //UNUTK MINUTE
                 if(reminderTime.equals("minute")){
-                    if(hourCurrent <= (hourUpdate-remindTime) && minuteCurrent <= minuteUpdate){
-                        //Untuk masang Alarm dari inputan
-                        mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
-                        mCurrentDate.set(Calendar.MONTH,monthUpdate);
-                        mCurrentDate.set(Calendar.YEAR,yearUpdate);
-                        mCurrentDate.set(Calendar.HOUR_OF_DAY,hourUpdate-remindTime);
-                        mCurrentDate.set(Calendar.MINUTE,minuteUpdate);
-                        mCurrentDate.set(Calendar.SECOND,0);
+
+                    minuteFlag = minuteUpdate - remindTime;
+
+                    if(dayCurrent == dayUpdate){
+
+                        if(minuteFlag < 0) {
+
+                            hourFlag = hourUpdate - 1;
+                            minuteUpdate = 60 + minuteFlag;
 
 
-                        intent = new Intent(context, MyAlarm.class);
-                        Bundle args = new Bundle();
-                        args.putParcelable(MyAlarm.EXTRA_SCHEDULE, data);
-                        intent.putExtra("a", args);
+                            if(hourCurrent <= hourFlag){
 
-                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-                        alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                                if(minuteCurrent <= minuteUpdate){
+                                    //Untuk masang Alarm dari inputan
+                                    mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                                    mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                                    mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                                    mCurrentDate.set(Calendar.HOUR_OF_DAY, hourFlag);
+                                    mCurrentDate.set(Calendar.MINUTE, minuteUpdate);
+                                    mCurrentDate.set(Calendar.SECOND, 0);
+
+                                    intent = new Intent(context, MyAlarm.class);
+                                    Bundle args = new Bundle();
+                                    args.putParcelable(MyAlarm.EXTRA_SCHEDULE, data);
+                                    intent.putExtra("a", args);
+
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                                    alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                                }
+                            }
+                        }
+
+                        else{
+                            if(hourCurrent <= hourUpdate){
+                                if(minuteCurrent <= minuteFlag){
+                                    //Untuk masang Alarm dari inputan
+                                    mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                                    mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                                    mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                                    mCurrentDate.set(Calendar.HOUR_OF_DAY, hourUpdate);
+                                    mCurrentDate.set(Calendar.MINUTE, minuteFlag);
+                                    mCurrentDate.set(Calendar.SECOND, 0);
+
+                                    intent = new Intent(context, MyAlarm.class);
+                                    Bundle args = new Bundle();
+                                    args.putParcelable(MyAlarm.EXTRA_SCHEDULE, data);
+                                    intent.putExtra("a", args);
+
+                                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                    AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                                    alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                                }
+                            }
+                        }
+                    }
+
+
+                    //Jika dia milih jam reminder di tanggal yang lebih lama dari hari
+                    else if(dayUpdate > dayCurrent){
+
+                        if(minuteFlag < 0){
+                            //Untuk Validasi itungan menit
+                            hourFlag = hourUpdate - 1;
+                            minuteUpdate = 60 + minuteFlag;
+
+                            //Untuk masang Alarm dari inputan
+                            mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                            mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                            mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                            mCurrentDate.set(Calendar.HOUR_OF_DAY, hourFlag);
+                            mCurrentDate.set(Calendar.MINUTE, minuteUpdate);
+                            mCurrentDate.set(Calendar.SECOND, 0);
+
+                            intent = new Intent(context, MyAlarm.class);
+                            Bundle args = new Bundle();
+                            args.putParcelable(MyAlarm.EXTRA_SCHEDULE, data);
+                            intent.putExtra("a", args);
+
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                        }
+                        else {
+                            //Untuk masang Alarm dari inputan
+                            mCurrentDate.set(Calendar.DAY_OF_MONTH, dayUpdate);
+                            mCurrentDate.set(Calendar.MONTH, monthUpdate);
+                            mCurrentDate.set(Calendar.YEAR, yearUpdate);
+                            mCurrentDate.set(Calendar.HOUR_OF_DAY, hourUpdate);
+                            mCurrentDate.set(Calendar.MINUTE, minuteFlag);
+                            mCurrentDate.set(Calendar.SECOND, 0);
+
+                            intent = new Intent(context, MyAlarm.class);
+                            Bundle args = new Bundle();
+                            args.putParcelable(MyAlarm.EXTRA_SCHEDULE, data);
+                            intent.putExtra("a", args);
+
+                            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                            alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                        }
                     }
                 }
             }
