@@ -117,6 +117,30 @@ public class MyAlarmBooting extends BroadcastReceiver {
                     }
                 }
             }
+
+            else if(yearCurrent <= yearUpdate && monthCurrent <= monthUpdate && dayCurrent <= dayUpdate){
+                if(reminderTime.equals("minute")){
+                    if(hourCurrent <= (hourUpdate-remindTime) && minuteCurrent <= minuteUpdate){
+                        //Untuk masang Alarm dari inputan
+                        mCurrentDate.set(Calendar.DAY_OF_MONTH,dayUpdate);
+                        mCurrentDate.set(Calendar.MONTH,monthUpdate);
+                        mCurrentDate.set(Calendar.YEAR,yearUpdate);
+                        mCurrentDate.set(Calendar.HOUR_OF_DAY,hourUpdate-remindTime);
+                        mCurrentDate.set(Calendar.MINUTE,minuteUpdate);
+                        mCurrentDate.set(Calendar.SECOND,0);
+
+
+                        intent = new Intent(context, MyAlarm.class);
+                        Bundle args = new Bundle();
+                        args.putParcelable(MyAlarm.EXTRA_SCHEDULE, data);
+                        intent.putExtra("a", args);
+
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, (int) data.getId(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+                        alarmMgr.set(AlarmManager.RTC_WAKEUP,mCurrentDate.getTimeInMillis(), pendingIntent);
+                    }
+                }
+            }
         }
 
     }
