@@ -47,8 +47,10 @@ public class popUpImage extends Activity {
 
         Uri uriFromPath = Uri.fromFile(new File(scheduleImage.getImage()));
         photoView.setImageURI(uriFromPath);
+    }
 
-
-
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

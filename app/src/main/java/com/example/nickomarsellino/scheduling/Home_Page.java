@@ -77,7 +77,7 @@ public class Home_Page extends AppCompatActivity {
                 .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        finish();
+                        System.exit(0);
                     }
                 })
 

@@ -105,6 +105,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
     String flagString;
     //
 
+    String nameMonth [] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    String monthName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -175,8 +177,31 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
         text_TimeUpdate.setTypeface(typeFaceCalendar);
         text_CalendarUpdate.setTypeface(typeFaceCalendar);
 
+
+
+        //Untuk split si Tanggal sesuai yang dibutuhkan
+        String calender = schedule.getDate().toString();
+
+        String[] separated = calender.split("-");
+
+        yearUpdate = Integer.parseInt(separated[0]);
+        monthUpdate = Integer.parseInt(separated[1]);
+        dayUpdate = Integer.parseInt(separated[2]);
+
+        //Untuk split si Time sesuai yang dibutuhkan
+        String time = schedule.getTime().toString();
+
+        String[] separatedTime = time.split(":");
+
+        hourUpdate = Integer.parseInt(separatedTime[0]);
+        minuteUpdate = Integer.parseInt(separatedTime[1]);
+        ////////////////////////////////////////////////////////////////////////////////
+
+
+        monthName =  viewMonth(monthUpdate);
+
+        text_CalendarUpdate.setText("Reminder For: "+dayUpdate+"-"+monthName+"-"+yearUpdate);
         text_TimeUpdate.setText("Time: "+schedule.getTime());
-        text_CalendarUpdate.setText("Reminder For: "+schedule.getDate());
 
 
 
@@ -263,26 +288,6 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                 }
             });
         }
-
-
-        //Untuk split si Tanggal sesuai yang dibutuhkan
-        String calender = schedule.getDate().toString();
-
-        String[] separated = calender.split("-");
-
-        yearUpdate = Integer.parseInt(separated[0]);
-        monthUpdate = Integer.parseInt(separated[1]);
-        dayUpdate = Integer.parseInt(separated[2]);
-
-        //Untuk split si Time sesuai yang dibutuhkan
-        String time = schedule.getTime().toString();
-
-        String[] separatedTime = time.split(":");
-
-        hourUpdate = Integer.parseInt(separatedTime[0]);
-        minuteUpdate = Integer.parseInt(separatedTime[1]);
-        ////////////////////////////////////////////////////////////////////////////////
-
 
 
         //Jika Tombol Add Image Di Tekan
@@ -564,7 +569,8 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
                         }
                     }
                 }
-                startActivity(new Intent(Update_Schedule.this, Home_Page.class));
+                finish();
+//                startActivity(new Intent(Update_Schedule.this, Home_Page.class));
             }
             else{
                 Toast.makeText(this, "Please Change To Day", Toast.LENGTH_SHORT).show();
@@ -685,7 +691,10 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-        text_CalendarUpdate.setText("Reminder For: "+day+"-"+month+"-"+year);
+
+        monthName =  viewMonth(month);
+
+        text_CalendarUpdate.setText("Reminder For: "+day+"-"+monthName+"-"+year);
 
         dayUpdate = day;
         monthUpdate = month;
@@ -707,6 +716,12 @@ public class Update_Schedule extends AppCompatActivity implements DatePickerDial
 
     ////////////////////////////////////////////////////////////////////////////////
 
+
+    public String viewMonth(int month){
+        String monthView = nameMonth[month];
+
+        return monthView;
+    }
 
     @Override
     public void onBackPressed() {
