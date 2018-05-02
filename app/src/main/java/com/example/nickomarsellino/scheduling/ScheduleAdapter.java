@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         public TextView scheduleTitleTxtV;
         public TextView scheduleContentxtV;
         public TextView scheduleDateTxtV;
-
+        public RelativeLayout viewListData, viewBackgroundDelete;
 
 
         public View layout;
@@ -49,7 +50,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             scheduleTitleTxtV = (TextView) v.findViewById(R.id.title);
             scheduleContentxtV = (TextView) v.findViewById(R.id.content);
             scheduleDateTxtV = (TextView) v.findViewById(R.id.date);
-
+            viewListData = (RelativeLayout) v.findViewById(R.id.viewListData);
+            viewBackgroundDelete = (RelativeLayout) v.findViewById(R.id.viewBackgroundDelete);
         }
     }
 
@@ -86,7 +88,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-
 
         //Insialisasi Untuk FOnt
         Typeface typeFaceTitle = Typeface.createFromAsset(holder.itemView.getContext().getAssets(), "Raleway-SemiBold.ttf");
@@ -156,6 +157,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
                 builder.create().show();
             }
         });
+
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return super.getItemViewType(position);
+
+
 
     }
 

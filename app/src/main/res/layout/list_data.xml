@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -8,56 +8,77 @@
     >
 
 
-    <android.support.v7.widget.CardView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_height="110dp"
+
+        android:layout_marginBottom="15dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginBottom="15dp"
-        app:cardElevation="10dp"
+        android:layout_marginTop="15dp"
         >
 
-        <LinearLayout
+        <RelativeLayout
+            android:id="@+id/viewBackgroundDelete"
+            android:layout_width="300dp"
+            android:layout_height="75dp"
+            android:layout_centerInParent="true"
+            android:background="#ff4757">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/delete_icon" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/viewListData"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="15dp"
-            >
+            android:layout_height="115dp">
 
-            <TextView
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Title: Bla Bla Bla"
-                android:id="@+id/title"
-                android:textStyle="bold"
-                android:textSize="20dp"
-                />
-            <TextView
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Content: BlaBlaBla"
-                android:maxLines="1"
-                android:id="@+id/content"
-                />
-            <TextView
-                android:layout_marginTop="5dp"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Content: BlaBlaBla"
-                android:id="@+id/date"
-                />
-            <android.support.v4.view.ViewPager
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/viewPagerImage"
-                >
+                app:cardElevation="10dp">
 
-            </android.support.v4.view.ViewPager>
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="15dp">
 
-    </android.support.v7.widget.CardView>
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Title: Bla Bla Bla"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:maxLines="1"
+                        android:text="Content: BlaBlaBla" />
+
+                    <TextView
+                        android:id="@+id/date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="5dp"
+                        android:text="Content: BlaBlaBla" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+        </RelativeLayout>
+    </RelativeLayout>
 
 
-</LinearLayout>
+
+
+</FrameLayout>

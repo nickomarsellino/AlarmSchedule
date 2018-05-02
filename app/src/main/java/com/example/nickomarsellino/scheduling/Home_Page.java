@@ -1,5 +1,6 @@
 package com.example.nickomarsellino.scheduling;
 
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -9,18 +10,25 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 
-public class Home_Page extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.List;
+
+public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
     private ScheduleDBHelper dbHelper;
     private ScheduleAdapter adapter;
+    private List<Schedule> list;
 
 
     //Inisialisasi Untuk Buttonnya
@@ -56,18 +64,36 @@ public class Home_Page extends AppCompatActivity {
 
 
 
-
+        list = new ArrayList<>();
         //Untuk Nampilin Data dari recycle view nya.
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+
+        // item decoration
+        // swap gesture
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallback
+                = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT, this);
+        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+
 
         dbHelper = new ScheduleDBHelper(this);
         adapter = new ScheduleAdapter(dbHelper.schedulesList(), this, mRecyclerView);
         mRecyclerView.setAdapter(adapter);
     }
 
+
+    @Override
+    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+        if(viewHolder instanceof ScheduleAdapter.ViewHolder){
+
+            // remove the item from recycler view
+            adapter.remove(viewHolder.getAdapterPosition());
+        }
+    }
 
     @Override
     public void onBackPressed() {
@@ -90,4 +116,6 @@ public class Home_Page extends AppCompatActivity {
                 .setTitle("WAIT");
         adbuilder.show();
     }
+
+
 }
