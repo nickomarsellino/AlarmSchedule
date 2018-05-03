@@ -15,6 +15,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,16 +29,18 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
     private RecyclerView.LayoutManager mLayoutManager;
     private ScheduleDBHelper dbHelper;
     private ScheduleAdapter adapter;
-    private List<Schedule> list;
 
 
     //Inisialisasi Untuk Buttonnya
     private FloatingActionButton createSchedule;
     private TextView title;
-
+    Schedule scheduleDelete;
+    int positionDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
 
 
         //Insialisasi Untuk FOnt
@@ -64,20 +67,24 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
 
 
 
-        list = new ArrayList<>();
         //Untuk Nampilin Data dari recycle view nya.
         mRecyclerView = (RecyclerView)findViewById(R.id.recyclerView);
+
+
         mRecyclerView.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         // item decoration
         // swap gesture
-        ItemTouchHelper.SimpleCallback itemTouchHelperCallback
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallbackLeft
                 = new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT, this);
-        new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(mRecyclerView);
+        new ItemTouchHelper(itemTouchHelperCallbackLeft).attachToRecyclerView(mRecyclerView);
+
+        ItemTouchHelper.SimpleCallback itemTouchHelperCallbackRight
+                = new RecyclerItemTouchHelper(0,ItemTouchHelper.RIGHT, this);
+        new ItemTouchHelper(itemTouchHelperCallbackRight).attachToRecyclerView(mRecyclerView);
 
 
         dbHelper = new ScheduleDBHelper(this);
@@ -87,11 +94,36 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
 
 
     @Override
-    public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
+    public void onSwiped(final RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if(viewHolder instanceof ScheduleAdapter.ViewHolder){
 
-            // remove the item from recycler view
+            positionDelete = viewHolder.getAdapterPosition();
+            scheduleDelete = adapter.getPosition(positionDelete);
             adapter.remove(viewHolder.getAdapterPosition());
+
+            AlertDialog.Builder adbuilder = new AlertDialog.Builder(Home_Page.this);
+            adbuilder.setMessage("Delete ?")
+                    .setCancelable(false)
+                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // remove the item from recycler view
+                            Log.v("test", String.valueOf(scheduleDelete));
+
+                        }
+                    })
+
+                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            adapter.restoreItem(scheduleDelete,positionDelete);
+                            dialog.cancel();
+                        }
+                    })
+                    .setTitle("WAIT");
+            adbuilder.show();
+
+
         }
     }
 

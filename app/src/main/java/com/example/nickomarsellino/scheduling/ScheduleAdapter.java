@@ -7,14 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -30,7 +29,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     private List<Schedule> mScheduleList;
     private Context mContext;
     private RecyclerView mRecyclerV;
-
 
 
 
@@ -56,14 +54,29 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     }
 
 
-    public void add(int position, Schedule schedule){
+    public Schedule getPosition(int position){
+        final Schedule schedule = mScheduleList.get(position);
+
+        return schedule;
+    }
+
+    public void restoreItem(Schedule schedule, int position) {
+        // notify item added by position
         mScheduleList.add(position, schedule);
         notifyItemInserted(position);
+
+
+        Log.v("test", "Position ini di restore: "+ String.valueOf(position));
     }
 
     public void remove(int position){
+
+        final Schedule schedule = mScheduleList.get(position);
+        Log.v("test", "Position ini di remove: "+ String.valueOf(position)+"\n");
+
         mScheduleList.remove(position);
         notifyItemRemoved(position);
+
     }
 
     public ScheduleAdapter(List<Schedule> myDataset, Context context, RecyclerView recyclerView){
