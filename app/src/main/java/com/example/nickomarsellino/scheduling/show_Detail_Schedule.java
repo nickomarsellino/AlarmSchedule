@@ -116,8 +116,6 @@ public class show_Detail_Schedule extends AppCompatActivity {
             ContainerImageData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    long test = img.getId();
-                    Log.v("test", String.valueOf(test));
 
                     goViewActivity(img.getId());
 

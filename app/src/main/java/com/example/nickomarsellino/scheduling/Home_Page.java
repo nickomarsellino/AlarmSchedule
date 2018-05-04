@@ -105,19 +105,22 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
             positionDelete = viewHolder.getAdapterPosition();
             scheduleDelete = adapter.getPosition(positionDelete);
             adapter.remove(viewHolder.getAdapterPosition());
-            Log.v("test", "Remove postion: "+String.valueOf(positionDelete)+"\n");
-            Log.v("test","Remove delete Schedule: "+String.valueOf(scheduleDelete.getId())+"\n");
 
 
             // showing snack bar with Undo option
             Snackbar snackbar = Snackbar
-                    .make(homePage, scheduleDelete.getTitle() + " removed from cart!", Snackbar.LENGTH_LONG);
+                    .make(homePage, scheduleDelete.getTitle() + " removed from schedule", Snackbar.LENGTH_LONG);
+
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
                     // undo is selected, restore the deleted item
                     adapter.restoreItem(scheduleDelete,positionDelete);
+
+                    adapter = new ScheduleAdapter(dbHelper.schedulesList(), Home_Page.this, mRecyclerView);
+                    mRecyclerView.setAdapter(adapter);
+
                 }
             });
             snackbar.setActionTextColor(Color.YELLOW);

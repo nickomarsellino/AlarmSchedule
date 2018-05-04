@@ -221,8 +221,6 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         db.execSQL("DELETE FROM "+TABLE_SCHEDULE_NAME+" WHERE _id='"+id+"'");
         db.execSQL("DELETE FROM "+TABLE_IMAGE_NAME+" WHERE schedule_id='"+id+"'");
 
-        Toast.makeText(context, "Deleted successfully.", Toast.LENGTH_SHORT).show();
-
     }
 
 
