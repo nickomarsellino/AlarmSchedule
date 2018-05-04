@@ -3,10 +3,12 @@ package com.example.nickomarsellino.scheduling;
 import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +19,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,7 +33,7 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
     private RecyclerView.LayoutManager mLayoutManager;
     private ScheduleDBHelper dbHelper;
     private ScheduleAdapter adapter;
-
+    private RelativeLayout homePage;
 
     //Inisialisasi Untuk Buttonnya
     private FloatingActionButton createSchedule;
@@ -51,9 +55,10 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home__page);
 
+
         //Inisialisasi Buttonya
         createSchedule = (FloatingActionButton) findViewById(R.id.fab_create_schedule);
-
+        homePage = (RelativeLayout) findViewById(R.id.homePage);
         title = (TextView) findViewById(R.id.textView);
         title.setTypeface(typeFaceTitle);
 
@@ -100,30 +105,23 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
             positionDelete = viewHolder.getAdapterPosition();
             scheduleDelete = adapter.getPosition(positionDelete);
             adapter.remove(viewHolder.getAdapterPosition());
-
-            AlertDialog.Builder adbuilder = new AlertDialog.Builder(Home_Page.this);
-            adbuilder.setMessage("Delete ?")
-                    .setCancelable(false)
-                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // remove the item from recycler view
-                            Log.v("test", String.valueOf(scheduleDelete));
-
-                        }
-                    })
-
-                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            adapter.restoreItem(scheduleDelete,positionDelete);
-                            dialog.cancel();
-                        }
-                    })
-                    .setTitle("WAIT");
-            adbuilder.show();
+            Log.v("test", "Remove postion: "+String.valueOf(positionDelete)+"\n");
+            Log.v("test","Remove delete Schedule: "+String.valueOf(scheduleDelete.getId())+"\n");
 
 
+            // showing snack bar with Undo option
+            Snackbar snackbar = Snackbar
+                    .make(homePage, scheduleDelete.getTitle() + " removed from cart!", Snackbar.LENGTH_LONG);
+            snackbar.setAction("UNDO", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    // undo is selected, restore the deleted item
+                    adapter.restoreItem(scheduleDelete,positionDelete);
+                }
+            });
+            snackbar.setActionTextColor(Color.YELLOW);
+            snackbar.show();
         }
     }
 

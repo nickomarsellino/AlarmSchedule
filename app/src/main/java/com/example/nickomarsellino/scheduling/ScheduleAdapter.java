@@ -66,13 +66,17 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         notifyItemInserted(position);
 
 
-        Log.v("test", "Position ini di restore: "+ String.valueOf(position));
+        Log.v("test", "Position ini di restore: "+ String.valueOf(position)+"\n");
+
+        Log.v("test", "Restore Schedule ini: "+String.valueOf(schedule.getId())+"\n");
     }
 
     public void remove(int position){
 
         final Schedule schedule = mScheduleList.get(position);
         Log.v("test", "Position ini di remove: "+ String.valueOf(position)+"\n");
+        Log.v("test", "Remove Schedule ini: "+String.valueOf(schedule.getId())+"\n");
+
 
         mScheduleList.remove(position);
         notifyItemRemoved(position);
