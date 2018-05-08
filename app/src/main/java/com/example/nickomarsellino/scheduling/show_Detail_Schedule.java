@@ -28,7 +28,7 @@ public class show_Detail_Schedule extends AppCompatActivity {
     @BindView(R.id.container_image) LinearLayout mContainerImage;
 
     //Inisialisasi Atribut
-    private TextView title,content,date,time;
+    private TextView title,content,date,time,imageText;
     private ViewPager image;
 
     //Inisialisasi database
@@ -57,11 +57,13 @@ public class show_Detail_Schedule extends AppCompatActivity {
         content = (TextView) findViewById(R.id.detail_Content);
         date = (TextView) findViewById(R.id.detail_Date);
         time = (TextView) findViewById(R.id.detail_Time);
+        imageText = (TextView) findViewById(R.id.imageText);
 
         title.setTypeface(typeFaceTitle);
         content.setTypeface(typeFaceContent);
         date.setTypeface(typeFaceCalendar);
         time.setTypeface(typeFaceCalendar);
+        imageText.setTypeface(typeFaceCalendar);
 
         //Harus ada ini
         ButterKnife.bind(this);
@@ -79,7 +81,7 @@ public class show_Detail_Schedule extends AppCompatActivity {
         //Get Data Dari Id nya
         Schedule schedule = dbHelper.getSchedule(receivedScheduleId);
         List<ScheduleImage> scheduleImage = dbHelper.getScheduleImage(receivedScheduleId);
-
+        Log.v("test", String.valueOf(scheduleImage));
 
         //nampilin Datanya
         title.setText("Title : "+schedule.getTitle());
@@ -87,6 +89,12 @@ public class show_Detail_Schedule extends AppCompatActivity {
         date.setText("Reminder For: "+schedule.getDate());
         time.setText("Time: "+schedule.getTime());
 
+        if(scheduleImage.isEmpty()){
+            imageText.setVisibility(View.INVISIBLE);
+        }
+        else {
+            imageText.setVisibility(View.VISIBLE);
+        }
 
 
         for(final ScheduleImage img: scheduleImage){
@@ -116,15 +124,9 @@ public class show_Detail_Schedule extends AppCompatActivity {
             ContainerImageData.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     goViewActivity(img.getId());
-
-
                 }
             });
-
-
-
         }
 
     }

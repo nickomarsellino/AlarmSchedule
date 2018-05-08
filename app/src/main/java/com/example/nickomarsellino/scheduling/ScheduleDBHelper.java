@@ -9,6 +9,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -85,6 +86,25 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
+        values.put(COLUMN_SCHEDULE_TITLE, schedule.getTitle());
+        values.put(COLUMN_SCHEDULE_CONTENT, schedule.getContent());
+        values.put(COLUMN_SCHEDULE_REMINDER, schedule.getReminder());
+        values.put(COLUMN_SCHEDULE_DATE, schedule.getDate());
+        values.put(COLUMN_SCHEDULE_TIME, schedule.getTime());
+
+        // insert
+        long rowId = sqLiteDatabase.insert(TABLE_SCHEDULE_NAME,null, values);
+        sqLiteDatabase.close();
+        return rowId;
+    }
+
+    public long restoreSchedule(Schedule schedule) {
+
+        SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        Log.v("test", String.valueOf(schedule.getId()));
+        values.put(COLUMN_SCHEDULE_ID, schedule.getId());
         values.put(COLUMN_SCHEDULE_TITLE, schedule.getTitle());
         values.put(COLUMN_SCHEDULE_CONTENT, schedule.getContent());
         values.put(COLUMN_SCHEDULE_REMINDER, schedule.getReminder());

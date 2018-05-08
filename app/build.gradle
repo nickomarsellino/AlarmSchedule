@@ -38,6 +38,6 @@ dependencies {
     compile 'com.android.support:design:26.1.0'
     compile "com.android.support:appcompat-v7:26.0.+"
 
-
+    compile 'com.bignerdranch.android:simple-item-decoration:1.0.0'
     implementation 'com.google.android.gms:play-services-ads:15.0.0'
 }

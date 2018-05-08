@@ -15,7 +15,7 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     public RecyclerItemTouchHelper(int dragDirs, int swipeDirs, RecyclerItemTouchHelperListener listener) {
         super(dragDirs, swipeDirs);
 
-      Dirs = swipeDirs;
+        Dirs = swipeDirs;
         this.listener = listener;
     }
 
@@ -33,11 +33,6 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        View listDataView = ((ScheduleAdapter.ViewHolder)viewHolder).viewListData;
-        getDefaultUIUtil().clearView(listDataView);
-
-        View deleteBackgroundView = ((ScheduleAdapter.ViewHolder)viewHolder).viewBackgroundDelete;
-        getDefaultUIUtil().clearView(deleteBackgroundView);
 
     }
 
@@ -56,16 +51,37 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-        View listDataView = ((ScheduleAdapter.ViewHolder)viewHolder).viewListData;
-        getDefaultUIUtil().onDraw(c, recyclerView, listDataView, dX, dY, actionState, isCurrentlyActive);
 
-        View listDataView1 = ((ScheduleAdapter.ViewHolder)viewHolder).viewBackgroundDelete;
-        getDefaultUIUtil().onDraw(c, recyclerView, listDataView1, dX, dY, actionState, isCurrentlyActive);
+        if (Dirs == 4){
+            View swipeLeft = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeLeft;
+            getDefaultUIUtil().clearView(swipeLeft);
 
+        }
+        else if(Dirs == 8){
+            View swipeRight = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeRight;
+            getDefaultUIUtil().clearView(swipeRight);
+
+        }
     }
 
     @Override
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
+        if (Dirs == 4){
+            View swipeLeft = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeLeft;
+            getDefaultUIUtil().clearView(swipeLeft);
+
+            View listDataView = ((ScheduleAdapter.ViewHolder)viewHolder).viewListData;
+            getDefaultUIUtil().onDraw(c, recyclerView, listDataView, dX, dY, actionState, isCurrentlyActive);
+
+        }
+        else if(Dirs == 8){
+            View swipeRight = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeRight;
+            getDefaultUIUtil().clearView(swipeRight);
+
+            View listDataView = ((ScheduleAdapter.ViewHolder)viewHolder).viewListData;
+            getDefaultUIUtil().onDraw(c, recyclerView, listDataView, dX, dY, actionState, isCurrentlyActive);
+
+        }
     }
 }

@@ -44,7 +44,8 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         public TextView scheduleTitleTxtV;
         public TextView scheduleContentxtV;
         public TextView scheduleDateTxtV;
-        public RelativeLayout viewListData, viewBackgroundDelete;
+        public TextView deleteText;
+        public RelativeLayout viewListData, viewSwipeLeft, viewSwipeRight;
 
 
         public View layout;
@@ -56,7 +57,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             scheduleContentxtV = (TextView) v.findViewById(R.id.content);
             scheduleDateTxtV = (TextView) v.findViewById(R.id.date);
             viewListData = (RelativeLayout) v.findViewById(R.id.viewListData);
-            viewBackgroundDelete = (RelativeLayout) v.findViewById(R.id.viewBackgroundDelete);
+            deleteText = (TextView) v.findViewById(R.id.delete);
+            viewSwipeLeft = (RelativeLayout) v.findViewById(R.id.viewBackgroundSwipeLeft);
+            viewSwipeRight = (RelativeLayout) v.findViewById(R.id.viewBackgroundSwipeRight);
         }
     }
 
@@ -77,8 +80,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         //save image from ID
         scheduleImage = dbHelper.getScheduleImage(schedule.getId());
 
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(scheduleImage)+"\n");
-
+        Log.v("test", String.valueOf(schedule.getId()));
 
         dbHelper.deleteSchedule(schedule.getId(), mContext);
 
@@ -88,8 +90,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
 
         alarmManager.cancel(pendingIntent);
-
-
 
         mScheduleList.remove(position);
         notifyItemRemoved(position);
@@ -102,17 +102,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         notifyItemInserted(position);
 
         dbHelper = new ScheduleDBHelper(mContext);
-        long idSchedule = dbHelper.saveNewSchedule(schedule);
+        long idSchedule = dbHelper.restoreSchedule(schedule);
 
         setAlarm(schedule,idSchedule);
         saveImages(idSchedule);
-
-
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(schedule.getTitle())+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(schedule.getContent())+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(schedule.getDate())+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(schedule.getTime())+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(schedule.getReminder())+"\n");
 
     }
 
@@ -162,6 +155,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         holder.scheduleTitleTxtV.setTypeface(typeFaceTitle);
         holder.scheduleContentxtV.setTypeface(typeFaceContent);
         holder.scheduleDateTxtV.setTypeface(typeFaceCalendar);
+        holder.deleteText.setTypeface(typeFaceContent);
 
 
         holder.scheduleTitleTxtV.setText("Title: " + schedule.getTitle());
@@ -173,47 +167,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             @Override
             public void onClick(View view) {
                 goViewActivity(schedule.getId());
-//                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//                builder.setTitle("Choose option");
-//                builder.setMessage("So... What ?");
-//
-//                builder.setPositiveButton("View Schedule", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                    }
-//                });
-
-//                builder.setNeutralButton("Delete Shedule", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        ScheduleDBHelper dbHelper = new ScheduleDBHelper(mContext);
-//                        dbHelper.deleteSchedule(schedule.getId(), mContext);
-//
-//
-//                        Intent myIntent = new Intent(mContext, MyAlarm.class);
-//                        PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, (int) schedule.getId(), myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                        AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-//
-//                        alarmManager.cancel(pendingIntent);
-//
-//                        mScheduleList.remove(position);
-//                        notifyItemRemoved(position);
-//                        notifyItemRangeChanged(position, mScheduleList.size());
-//                        notifyDataSetChanged();
-//                    }
-//                });
-//
-//                builder.setNegativeButton("Update Schedule", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        goUpdateActivity(schedule.getId());
-//                    }
-//                });
-//
-//
-//                builder.create().show();
-                 Log.v("test", "ini: "+String.valueOf(schedule.getId())+"\n");
             }
         });
 
@@ -228,8 +181,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             scheduleImage.setImage(img.getImage());
 
             dbHelper.saveNewScheduleImage(scheduleImage);
-
-            Log.v("test",img.getImage());
         }
     }
 
@@ -290,13 +241,5 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         hourUpdate = Integer.parseInt(separatedTime[0]);
         minuteUpdate = Integer.parseInt(separatedTime[1]);
         ////////////////////////////////////////////////////////////////////////////////
-
-
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(yearUpdate)+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(monthUpdate)+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(dayUpdate)+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(hourUpdate)+"\n");
-        Log.v("test", "Restore Schedule ini: "+String.valueOf(minuteUpdate)+"\n");
-
     }
 }
