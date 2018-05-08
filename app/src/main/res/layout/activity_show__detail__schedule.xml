@@ -10,12 +10,11 @@
     >
 
 
-
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        app:cardElevation="10dp"
+        app:cardElevation="2dp"
         >
 
 
@@ -40,15 +39,6 @@
                     android:layout_marginBottom="15dp"
                     />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Title :"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -59,18 +49,10 @@
                     android:text="BlaBlaBla"
                     android:textSize="20dp"
                     android:id="@+id/detail_Title"
+                    android:textStyle="bold"
                     />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Content :"
-                    android:textSize="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    />
+
 
                 <TextView
                     android:layout_width="match_parent"
@@ -110,6 +92,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Image :"
+                    android:id="@+id/imageText"
                     android:textSize="15dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="20dp"
@@ -118,14 +101,20 @@
                     />
 
 
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
                         android:id="@+id/container_image"
+                        android:layout_margin="0dp"
                         />
+
+                </HorizontalScrollView>
 
 
             </LinearLayout>

@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.example.nickomarsellino.scheduling.Home_Page"
     android:orientation="vertical"
+    android:id="@+id/homePage"
     >
+
 
 
     <TextView
@@ -15,7 +17,6 @@
         android:text="My Schedule"
         android:textAlignment="center"
         android:textSize="20dp"
-        android:textStyle="italic"
         android:padding="10dp"
         android:id="@+id/textView" />
 

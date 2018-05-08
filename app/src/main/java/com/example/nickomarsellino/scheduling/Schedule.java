@@ -16,15 +16,17 @@ public class Schedule implements Parcelable {
     private String content;
     private String date;
     private String time;
+    private String reminder;
     private List<String> images;
 
     public Schedule(){
 
     }
 
-    public Schedule(String title, String content, String date, String time,List<String> images) {
+    public Schedule(String title, String content, String reminder,String date, String time,List<String> images) {
         this.title = title;
         this.content = content;
+        this.reminder = reminder;
         this.date = date;
         this.time = time;
         this.images = images;
@@ -41,6 +43,10 @@ public class Schedule implements Parcelable {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public void setReminder(String reminder) {
+        this.reminder = reminder;
     }
 
     public void setId(long id) {
@@ -71,6 +77,10 @@ public class Schedule implements Parcelable {
 
     public String getContent() {
         return content;
+    }
+
+    public String getReminder() {
+        return reminder;
     }
 
     public String getDate() {

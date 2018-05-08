@@ -34,11 +34,9 @@ public class MyAlarm extends BroadcastReceiver {
         Schedule schedule = b.getParcelable(EXTRA_SCHEDULE);
 
         String title = schedule.getTitle();
-        String date = schedule.getDate();
-
+        String date = "Reminder For: "+schedule.getDate();
 
         createNotification(context, title, date);
-
     }
 
     public void createNotification(Context context, String title, String date) {
@@ -49,6 +47,19 @@ public class MyAlarm extends BroadcastReceiver {
         String channelName = "Channel Name";
         int importance = NotificationManager.IMPORTANCE_HIGH;
 
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                .setSmallIcon(R.drawable.plusdata)
+                .setContentTitle(title)
+                .setContentText(date);
+
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, getAlarmId(context) ,
+                new Intent(context,Home_Page.class), PendingIntent.FLAG_UPDATE_CURRENT);
+
+        builder.setContentIntent(pendingIntent);
+        builder.setDefaults(android.support.v4.app.NotificationCompat.DEFAULT_SOUND);
+
+        builder.setAutoCancel(true);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel mChannel = new NotificationChannel(
@@ -60,44 +71,8 @@ public class MyAlarm extends BroadcastReceiver {
             mChannel.setLightColor(Color.LTGRAY);
             mChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
 
-            notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(mChannel);
-
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, getAlarmId(context) , new Intent(context,Home_Page.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
-
-            Notification.Builder builder = new Notification.Builder(context)
-                    .setSmallIcon(R.drawable.plusdata)
-                    .setContentTitle(title)
-                    .setContentText(date);
-
-            builder.setContentIntent(pendingIntent);
-            builder.setDefaults(android.support.v4.app.NotificationCompat.DEFAULT_SOUND);
-
-            builder.setAutoCancel(true);
-
-            notificationManager.notify(getAlarmId(context), builder.build());
-
-
         }
-
-        Notification.Builder builder = new Notification.Builder(context)
-                .setSmallIcon(R.drawable.plusdata)
-                .setContentTitle(title)
-                .setContentText(date);
-
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
-//                .setSmallIcon(R.drawable.plusdata)
-//                .setContentTitle(title)
-//                .setContentText(date);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, getAlarmId(context) , new Intent(context,Home_Page.class), PendingIntent.FLAG_UPDATE_CURRENT);
-
-        builder.setContentIntent(pendingIntent);
-        builder.setDefaults(android.support.v4.app.NotificationCompat.DEFAULT_SOUND);
-
-        builder.setAutoCancel(true);
 
         notificationManager.notify(getAlarmId(context), builder.build());
     }
