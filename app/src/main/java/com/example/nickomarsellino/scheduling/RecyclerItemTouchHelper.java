@@ -52,36 +52,17 @@ public class RecyclerItemTouchHelper extends ItemTouchHelper.SimpleCallback {
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-        if (Dirs == 4){
-            View swipeLeft = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeLeft;
+            View swipeLeft = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipe;
             getDefaultUIUtil().clearView(swipeLeft);
-
-        }
-        else if(Dirs == 8){
-            View swipeRight = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeRight;
-            getDefaultUIUtil().clearView(swipeRight);
-
-        }
     }
 
     @Override
     public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
 
-        if (Dirs == 4){
-            View swipeLeft = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeLeft;
+            View swipeLeft = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipe;
             getDefaultUIUtil().clearView(swipeLeft);
 
             View listDataView = ((ScheduleAdapter.ViewHolder)viewHolder).viewListData;
             getDefaultUIUtil().onDraw(c, recyclerView, listDataView, dX, dY, actionState, isCurrentlyActive);
-
-        }
-        else if(Dirs == 8){
-            View swipeRight = ((ScheduleAdapter.ViewHolder)viewHolder).viewSwipeRight;
-            getDefaultUIUtil().clearView(swipeRight);
-
-            View listDataView = ((ScheduleAdapter.ViewHolder)viewHolder).viewListData;
-            getDefaultUIUtil().onDraw(c, recyclerView, listDataView, dX, dY, actionState, isCurrentlyActive);
-
-        }
     }
 }

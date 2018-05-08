@@ -7,18 +7,25 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
+import java.io.File;
 import java.util.Calendar;
 import java.util.List;
 
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 
 /**
@@ -34,7 +41,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     Calendar mCurrentDate;
     private ScheduleDBHelper dbHelper;
 
-
     int dayUpdate, monthUpdate, yearUpdate, hourUpdate, minuteUpdate, remindTime;
     int dayCurrent, monthCurrent, yearCurrent, hourCurrent, minuteCurrent;
 
@@ -45,7 +51,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         public TextView scheduleContentxtV;
         public TextView scheduleDateTxtV;
         public TextView deleteText;
-        public RelativeLayout viewListData, viewSwipeLeft, viewSwipeRight;
+        public TextView imageTextView;
+        public ImageView imageViewData;
+        public RelativeLayout viewListData, viewSwipe;
 
 
         public View layout;
@@ -58,8 +66,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             scheduleDateTxtV = (TextView) v.findViewById(R.id.date);
             viewListData = (RelativeLayout) v.findViewById(R.id.viewListData);
             deleteText = (TextView) v.findViewById(R.id.delete);
-            viewSwipeLeft = (RelativeLayout) v.findViewById(R.id.viewBackgroundSwipeLeft);
-            viewSwipeRight = (RelativeLayout) v.findViewById(R.id.viewBackgroundSwipeRight);
+            imageTextView = (TextView) v.findViewById(R.id.imageText);
+            imageViewData = (ImageView) v.findViewById(R.id.imageView);
+            viewSwipe= (RelativeLayout) v.findViewById(R.id.viewBackgroundSwipe);
+
         }
     }
 
@@ -116,6 +126,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         mScheduleList = myDataset;
         mContext = context;
         mRecyclerV = recyclerView;
+
+        // item decoration
+        mRecyclerV.addItemDecoration(new SimpleItemDecorator(5));
     }
 
     public void ScheduleAdapter1(List<Schedule> myDataset){
@@ -129,6 +142,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
 
         View v = inflater.inflate(R.layout.list_data,parent,false);
+
 
         ViewHolder vh = new ViewHolder(v);
 
@@ -146,21 +160,40 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
         Typeface typeFaceCalendar = Typeface.createFromAsset(holder.itemView.getContext().getAssets(), "Raleway-LightItalic.ttf");
 
-        //////////////////////////////////
 
 
 
         final Schedule schedule = mScheduleList.get(position);
+        dbHelper = new ScheduleDBHelper(mContext);
+
+        final List<ScheduleImage> scheduleImage = dbHelper.getScheduleImage(schedule.getId());
+        Log.v("test", "test schdeule"+schedule.getId());
 
         holder.scheduleTitleTxtV.setTypeface(typeFaceTitle);
         holder.scheduleContentxtV.setTypeface(typeFaceContent);
         holder.scheduleDateTxtV.setTypeface(typeFaceCalendar);
         holder.deleteText.setTypeface(typeFaceContent);
+        holder.imageTextView.setTypeface(typeFaceCalendar);
+
+
 
 
         holder.scheduleTitleTxtV.setText("Title: " + schedule.getTitle());
         holder.scheduleContentxtV.setText("Content: " + schedule.getContent());
         holder.scheduleDateTxtV.setText("Reminder For: " +schedule.getDate());
+
+        if(scheduleImage.isEmpty()){
+            holder.imageTextView.setVisibility(View.INVISIBLE);
+        }
+        else {
+            holder.imageTextView.setVisibility(View.VISIBLE);
+
+            for(final ScheduleImage img: scheduleImage){
+                Uri uriFromPath = Uri.fromFile(new File(img.getImage()));
+                holder.imageViewData.setImageURI(uriFromPath);
+            }
+        }
+
 
 
         holder.layout.setOnClickListener(new View.OnClickListener() {
