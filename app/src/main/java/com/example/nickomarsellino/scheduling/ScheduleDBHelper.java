@@ -103,7 +103,6 @@ public class ScheduleDBHelper extends SQLiteOpenHelper{
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
-        Log.v("test", String.valueOf(schedule.getId()));
         values.put(COLUMN_SCHEDULE_ID, schedule.getId());
         values.put(COLUMN_SCHEDULE_TITLE, schedule.getTitle());
         values.put(COLUMN_SCHEDULE_CONTENT, schedule.getContent());
