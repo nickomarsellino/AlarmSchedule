@@ -116,6 +116,9 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         dbHelper = new ScheduleDBHelper(mContext);
         long idSchedule = dbHelper.restoreSchedule(schedule);
 
+        Log.v("test", "ini Id: "+String.valueOf(schedule.getId())+"\n");
+        Log.v("test", "ini setelah restore: "+String.valueOf(idSchedule)+"\n");
+
         setAlarm(schedule,idSchedule);
         saveImages(idSchedule);
 
