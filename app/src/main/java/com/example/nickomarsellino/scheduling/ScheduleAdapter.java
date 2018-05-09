@@ -183,7 +183,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         holder.scheduleDateTxtV.setText("Reminder For: " +schedule.getDate());
 
         if(scheduleImage.isEmpty()){
-            holder.imageTextView.setVisibility(View.INVISIBLE);
+            holder.imageTextView.setVisibility(View.GONE);
         }
         else {
             holder.imageTextView.setVisibility(View.VISIBLE);
