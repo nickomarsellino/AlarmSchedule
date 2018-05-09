@@ -68,7 +68,6 @@ public class Home_Page extends AppCompatActivity implements RecyclerItemTouchHel
         createSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
                 startActivity(new Intent(Home_Page.this, Add_Schedule.class));
             }
         });
