@@ -95,6 +95,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
         //save image from ID
         scheduleImage = dbHelper.getScheduleImage(schedule.getId());
+
         dbHelper.deleteSchedule(schedule.getId(), mContext);
 
         Intent myIntent = new Intent(mContext, MyAlarm.class);
@@ -115,9 +116,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
         dbHelper = new ScheduleDBHelper(mContext);
         long idSchedule = dbHelper.restoreSchedule(schedule);
-
-        Log.v("test", "ini Id: "+String.valueOf(schedule.getId())+"\n");
-        Log.v("test", "ini setelah restore: "+String.valueOf(idSchedule)+"\n");
 
         setAlarm(schedule,idSchedule);
         saveImages(idSchedule);
@@ -188,6 +186,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
         if(scheduleImage.isEmpty()){
             holder.imageTextView.setVisibility(View.GONE);
+            holder.imageViewData.setVisibility(View.GONE);
         }
         else {
             holder.imageTextView.setVisibility(View.VISIBLE);
@@ -216,6 +215,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             ScheduleImage scheduleImage = new ScheduleImage();
             scheduleImage.setIdSchedule(id);
             scheduleImage.setImage(img.getImage());
+
+            Log.v("test", "restore Item: "+id+"\n");
+            Log.v("test", "restore Item: "+img.getImage()+"\n");
+
 
             dbHelper.saveNewScheduleImage(scheduleImage);
         }
